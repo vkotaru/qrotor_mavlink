@@ -1,5 +1,5 @@
 # qrotor_mavlink
-Custom wrapper for `libmavconn` from `mavros`
+Custom C++, Eigen wrapper for `libmavconn` from [mavros](https://github.com/mavlink/mavros/tree/master)
 
 > :warning: `qrotor_mavlink` currently only supports `UDP`
 
