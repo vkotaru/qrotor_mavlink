@@ -1,5 +1,5 @@
 # qrotor_mavlink
-Custom wrapper for libmavconn from mavros
+Custom wrapper for `libmavconn` from `mavros`
 
 > :warning: `qrotor_mavlink` currently only supports `UDP`
 
@@ -15,4 +15,8 @@ cd build
 cmake ..
 make
 ```
+
+
+---
+(Alternately, https://github.com/rosflight/firmware/blob/master/comms/mavlink/mavlink.cpp and https://github.com/mavlink/mavlink/blob/master/examples/linux/mavlink_udp.c can be used together)
 

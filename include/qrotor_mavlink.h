@@ -3,11 +3,11 @@
 
 #include <chrono>
 #include <condition_variable>
-
 #include <mavconn/interface.h>
 #include <mavconn/serial.h>
 #include <mavconn/tcp.h>
 #include <mavconn/udp.h>
+#include <queue>
 
 #include <eigen3/Eigen/Dense>
 
@@ -23,7 +23,6 @@ private:
   uint8_t system_id = 1;
   uint8_t component_id = 250;
 
-  mavlink_message_t msg;
   mavlink_status_t status;
   bool initialized = false;
 
@@ -31,6 +30,8 @@ private:
 
   void recv_message(const mavlink_message_t *message, const Framing framing);
   bool wait_one();
+
+  std::queue<mavlink_message_t> msg_buffer_queue;
 
 public:
   QrotorMavlink();
@@ -41,12 +42,17 @@ public:
   ~QrotorMavlink();
 
   bool init();
+  void decode();
 
-  /* mavlink messages */
+  /* send mavlink messages */
   void send_heartbeat(const uint8_t base_mode, const uint32_t custom_mode,
                       const uint8_t system_status);
   void send_imu(uint8_t system_id, uint64_t timestamp_us,
                 const Eigen::Vector3f &accel, const Eigen::Vector3f &gyro);
+
+
+  /* handle mavlink messages */
+  
 };
 
 } // namespace qrotor_mavlink

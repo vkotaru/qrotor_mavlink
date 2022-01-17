@@ -7,5 +7,11 @@ add_subdirectory(libmavconn)
 include_directories(include)
 
 add_library(qrotor_mavlink src/qrotor_mavlink.cpp)
-target_link_libraries(qrotor_mavlink mavconn)
+target_link_libraries(qrotor_mavlink mavconn pthread)
+
+add_executable(client test/client.cpp)
+target_link_libraries(client qrotor_mavlink pthread)
+
+add_executable(server test/server.cpp)
+target_link_libraries(server qrotor_mavlink pthread)
 

@@ -21,6 +21,7 @@ void QrotorMavlink::recv_message(const mavlink_message_t *message,
                                  const Framing framing) {
   printf("Got message %u, len: %u, framing: %d\n", message->msgid, message->len,
          int(framing));
+  msg_buffer_queue.push(*message);
   // message_id = message->msgid;
   cond.notify_one();
 }
@@ -29,6 +30,20 @@ bool QrotorMavlink::wait_one() {
   std::unique_lock<std::mutex> lock(mutex);
   return cond.wait_for(lock, std::chrono::seconds(2)) ==
          std::cv_status::no_timeout;
+}
+
+void QrotorMavlink::decode() {
+  while (!msg_buffer_queue.empty()) {
+    mavlink_message_t buf_msg = msg_buffer_queue.front();
+
+    if (buf_msg.msgid == mavlink::minimal::msg::HEARTBEAT::MSG_ID) {
+      mavlink::MsgMap map(buf_msg);
+      mavlink::minimal::msg::HEARTBEAT s;
+      s.deserialize(map);
+      std::cout << s.to_yaml() << std::endl;
+    }
+    msg_buffer_queue.pop();
+  }
 }
 
 bool QrotorMavlink::init() {
