@@ -1,1 +1,7 @@
 build/
+
+mavlink-gbp-release
+
+# editors
+.vscode/
+.idea/

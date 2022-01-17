@@ -53,6 +53,8 @@ target_link_libraries(mavconn
   ${Boost_LIBRARIES}
   ${console_bridge_LIBRARIES}
 )
+target_include_directories(mavconn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 
 # Use catkin-supplied em_expand macros to generate source files
 em_expand(${CMAKE_CURRENT_SOURCE_DIR}/mavlink.context.py.in
