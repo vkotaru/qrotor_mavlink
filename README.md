@@ -1,12 +1,14 @@
 # qrotor_mavlink
 Custom wrapper for libmavconn from mavros
 
-### generate cpp msg header files (if not already generated)
+> :warning: `qrotor_mavlink` currently only supports `UDP`
+
+##### generate cpp msg header files (if not already generated)
 ```
 bash install_mavlink_msgs.sh
 ```
 
-### build
+##### build
 ```
 mkdir build
 cd build
