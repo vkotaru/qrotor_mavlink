@@ -36,11 +36,22 @@ void QrotorMavlink::decode() {
   while (!msg_buffer_queue.empty()) {
     mavlink_message_t buf_msg = msg_buffer_queue.front();
 
-    if (buf_msg.msgid == mavlink::minimal::msg::HEARTBEAT::MSG_ID) {
-      mavlink::MsgMap map(buf_msg);
-      mavlink::minimal::msg::HEARTBEAT s;
-      s.deserialize(map);
-      std::cout << s.to_yaml() << std::endl;
+    switch (buf_msg.msgid) {
+    case mavlink_msg::HEARTBEAT::MSG_ID:
+      this->deserialize_heartbeat(buf_msg);
+      break;
+    case mavlink_msg::ATTITUDE_QUATERNION::MSG_ID:
+      this->deserialize_attitude_quaternion(buf_msg);
+      break;
+    case mavlink_msg::SCALED_IMU::MSG_ID:
+      this->deserialize_imu(buf_msg);
+      break;
+    case mavlink_msg::BATTERY_STATUS::MSG_ID:
+      this->deserialize_battery_status(buf_msg);
+      break;
+
+    default:
+      break;
     }
     msg_buffer_queue.pop();
   }
@@ -63,7 +74,7 @@ bool QrotorMavlink::init() {
 void QrotorMavlink::send_heartbeat(const uint8_t base_mode,
                                    const uint32_t custom_mode,
                                    const uint8_t system_status) {
-  mavlink::minimal::msg::HEARTBEAT hb = {};
+  mavlink_msg::HEARTBEAT hb = {};
   hb.type = int(mavlink::minimal::MAV_TYPE::QUADROTOR);
   hb.autopilot = int(mavlink::minimal::MAV_AUTOPILOT::GENERIC);
   hb.base_mode = base_mode;
@@ -72,11 +83,12 @@ void QrotorMavlink::send_heartbeat(const uint8_t base_mode,
   client->send_message(hb);
 }
 
-void QrotorMavlink::send_imu(uint8_t system_id, uint64_t timestamp_us,
+void QrotorMavlink::send_imu(uint64_t timestamp_us,
                              const Eigen::Vector3f &accel,
-                             const Eigen::Vector3f &gyro) {
+                             const Eigen::Vector3f &gyro,
+                             const Eigen::Vector3f &mag) {
 
-  mavlink::common::msg::SCALED_IMU imu = {};
+  mavlink_msg::SCALED_IMU imu = {};
   imu.time_boot_ms = timestamp_us;
   imu.xacc = accel(0);
   imu.yacc = accel(1);
@@ -84,7 +96,67 @@ void QrotorMavlink::send_imu(uint8_t system_id, uint64_t timestamp_us,
   imu.xgyro = gyro(0);
   imu.ygyro = gyro(1);
   imu.zgyro = gyro(2);
+  imu.xmag = mag(0);
+  imu.ymag = mag(1);
+  imu.zmag = mag(2);
   client->send_message(imu);
+}
+
+void QrotorMavlink::send_attitude_quaternion(
+    uint64_t timestamp_us, const Eigen::Quaternionf &q,
+    const Eigen::Vector3f &angular_velocity) {
+
+  mavlink_msg::ATTITUDE_QUATERNION att = {};
+  att.time_boot_ms = timestamp_us;
+  att.q1 = q.w();
+  att.q2 = q.x();
+  att.q3 = q.y();
+  att.q4 = q.z();
+  att.rollspeed = angular_velocity(0);
+  att.pitchspeed = angular_velocity(1);
+  att.yawspeed = angular_velocity(2);
+  client->send_message(att);
+}
+
+void QrotorMavlink::send_battery_status(const uint16_t voltage,
+                                        const int16_t current) {
+  mavlink_msg::BATTERY_STATUS batt = {};
+  batt.voltages[0] = (voltage);
+  batt.current_battery = current;
+  client->send_message(batt);
+}
+
+mavlink_msg::HEARTBEAT QrotorMavlink::deserialize_heartbeat(mavlink_message_t msg) {
+  mavlink::MsgMap map(msg);
+  mavlink_msg::HEARTBEAT s;
+  s.deserialize(map);
+  std::cout << s.to_yaml() << std::endl;
+  return s;
+}
+
+mavlink_msg::ATTITUDE_QUATERNION
+QrotorMavlink::deserialize_attitude_quaternion(mavlink_message_t msg) {
+  mavlink::MsgMap map(msg);
+  mavlink_msg::ATTITUDE_QUATERNION s;
+  s.deserialize(map);
+  std::cout << s.to_yaml() << std::endl;
+  return s;
+}
+
+mavlink_msg::SCALED_IMU QrotorMavlink::deserialize_imu(mavlink_message_t msg) {
+  mavlink::MsgMap map(msg);
+  mavlink_msg::SCALED_IMU s;
+  s.deserialize(map);
+  std::cout << s.to_yaml() << std::endl;
+  return s;
+}
+
+mavlink_msg::BATTERY_STATUS QrotorMavlink::deserialize_battery_status(mavlink_message_t msg) {
+  mavlink::MsgMap map(msg);
+  mavlink_msg::BATTERY_STATUS s;
+  s.deserialize(map);
+  std::cout << s.to_yaml() << std::endl;
+  return s;
 }
 
 } // namespace qrotor_mavlink

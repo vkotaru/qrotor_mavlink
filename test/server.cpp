@@ -10,7 +10,7 @@ int main() {
   }
   while (true) {
     server.decode();
-    sleep(0.01);
+    sleep(0.1);
   }
   return 0;
 }

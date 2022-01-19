@@ -14,6 +14,10 @@
 namespace qrotor_mavlink {
 using namespace mavconn;
 using namespace mavlink;
+namespace mavlink_msg {
+using namespace mavlink::minimal::msg;
+using namespace mavlink::common::msg;
+} // namespace msg
 
 class QrotorMavlink {
 private:
@@ -47,12 +51,19 @@ public:
   /* send mavlink messages */
   void send_heartbeat(const uint8_t base_mode, const uint32_t custom_mode,
                       const uint8_t system_status);
-  void send_imu(uint8_t system_id, uint64_t timestamp_us,
-                const Eigen::Vector3f &accel, const Eigen::Vector3f &gyro);
-
+  void send_imu(uint64_t timestamp_us, const Eigen::Vector3f &accel,
+                const Eigen::Vector3f &gyro, const Eigen::Vector3f &mag);
+  void send_attitude_quaternion(uint64_t timestamp_us,
+                                const Eigen::Quaternionf &q,
+                                const Eigen::Vector3f &angular_velocity);
+  void send_battery_status(const uint16_t voltage, const int16_t current);
 
   /* handle mavlink messages */
-  
+  mavlink_msg::HEARTBEAT deserialize_heartbeat(mavlink_message_t msg);
+  mavlink_msg::ATTITUDE_QUATERNION
+  deserialize_attitude_quaternion(mavlink_message_t msg);
+  mavlink_msg::SCALED_IMU deserialize_imu(mavlink_message_t msg);
+  mavlink_msg::BATTERY_STATUS deserialize_battery_status(mavlink_message_t msg);
 };
 
 } // namespace qrotor_mavlink
