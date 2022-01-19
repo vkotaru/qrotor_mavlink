@@ -8,6 +8,7 @@ include_directories(include)
 
 add_library(qrotor_mavlink src/qrotor_mavlink.cpp)
 target_link_libraries(qrotor_mavlink mavconn pthread)
+target_include_directories(qrotor_mavlink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(client test/client.cpp)
 target_link_libraries(client qrotor_mavlink pthread)
