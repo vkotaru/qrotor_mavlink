@@ -31,6 +31,7 @@
 #include <mavlink/v2.0/icarous/icarous.hpp>
 #include <mavlink/v2.0/matrixpilot/matrixpilot.hpp>
 #include <mavlink/v2.0/paparazzi/paparazzi.hpp>
+#include <mavlink/v2.0/qrotor/qrotor.hpp>
 #include <mavlink/v2.0/standard/standard.hpp>
 #include <mavlink/v2.0/uAvionix/uAvionix.hpp>
 #include <mavlink/v2.0/ualberta/ualberta.hpp>

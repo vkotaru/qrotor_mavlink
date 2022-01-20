@@ -42,8 +42,8 @@ em_expand(${CMAKE_CURRENT_SOURCE_DIR}/mavlink.context.py.in
   ${CMAKE_CURRENT_SOURCE_DIR}/src/mavlink_helpers.cpp.em
   ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/src/mavlink_helpers.cpp)
 
-message(STATUS "Copy mavlink_dialect.h to source tree")
-file(
-  COPY ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/include/mavconn/mavlink_dialect.h
-  DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/mavconn/
-  )
+# message(STATUS "Copy mavlink_dialect.h to source tree")
+# file(
+#   COPY ${CMAKE_CURRENT_BINARY_DIR}/catkin_generated/include/mavconn/mavlink_dialect.h
+#   DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/mavconn/
+#   )

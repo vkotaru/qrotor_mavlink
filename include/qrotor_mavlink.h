@@ -7,6 +7,7 @@
 #include <mavconn/serial.h>
 #include <mavconn/tcp.h>
 #include <mavconn/udp.h>
+#include <mutex>
 #include <queue>
 
 #include <eigen3/Eigen/Dense>
@@ -17,11 +18,13 @@ using namespace mavlink;
 namespace mavlink_msg {
 using namespace mavlink::minimal::msg;
 using namespace mavlink::common::msg;
-} // namespace msg
+using namespace mavlink::qrotor::msg;
+} // namespace mavlink_msg
 
 class QrotorMavlink {
 private:
-  std::mutex mutex;
+  std::mutex mutex; // TODO figure this out
+  std::mutex message_buffer_mutex_;
   std::condition_variable cond;
 
   uint8_t system_id = 1;
@@ -34,8 +37,7 @@ private:
 
   void recv_message(const mavlink_message_t *message, const Framing framing);
   bool wait_one();
-
-  std::queue<mavlink_message_t> msg_buffer_queue;
+  std::queue<mavlink_message_t> msg_buffer_queue_;
 
 public:
   QrotorMavlink();
@@ -48,6 +50,14 @@ public:
   bool init();
   void decode();
 
+  void
+  copy_and_flush_buffer_queue(std::queue<mavlink_message_t> &copy_to_buffer) {
+    message_buffer_mutex_.lock();
+    copy_to_buffer = msg_buffer_queue_;
+    msg_buffer_queue_ = {};
+    message_buffer_mutex_.unlock();
+  }
+
   /* send mavlink messages */
   void send_heartbeat(const uint8_t base_mode, const uint32_t custom_mode,
                       const uint8_t system_status);
@@ -57,6 +67,9 @@ public:
                                 const Eigen::Quaternionf &q,
                                 const Eigen::Vector3f &angular_velocity);
   void send_battery_status(const uint16_t voltage, const int16_t current);
+  void send_offboard_control(const uint8_t mode, const float x, const float y,
+                             const float z, const float thrust,
+                             const float yaw);
 
   /* handle mavlink messages */
   mavlink_msg::HEARTBEAT deserialize_heartbeat(mavlink_message_t msg);
@@ -64,6 +77,8 @@ public:
   deserialize_attitude_quaternion(mavlink_message_t msg);
   mavlink_msg::SCALED_IMU deserialize_imu(mavlink_message_t msg);
   mavlink_msg::BATTERY_STATUS deserialize_battery_status(mavlink_message_t msg);
+  mavlink_msg::OFFBOARD_CONTROL
+  deserialize_offboard_control(mavlink_message_t msg);
 };
 
 } // namespace qrotor_mavlink

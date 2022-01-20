@@ -21,7 +21,7 @@ namespace qrotor {
 /**
  * Array of msg_entry needed for @p mavlink_parse_char() (trought @p mavlink_get_msg_entry())
  */
-constexpr std::array<mavlink_msg_entry_t, 1> MESSAGE_ENTRIES {{ {180, 21, 21, 21, 0, 0, 0} }};
+constexpr std::array<mavlink_msg_entry_t, 3> MESSAGE_ENTRIES {{ {0, 50, 9, 9, 0, 0, 0}, {180, 21, 21, 21, 0, 0, 0}, {300, 217, 22, 22, 0, 0, 0} }};
 
 //! MAVLINK VERSION
 constexpr auto MAVLINK_VERSION = 3;
@@ -52,4 +52,4 @@ constexpr auto OFFBOARD_CONTROL_MODE_ENUM_END = 6;
 #include "./mavlink_msg_offboard_control.hpp"
 
 // base include
-
+#include "../minimal/minimal.hpp"

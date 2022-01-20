@@ -19,10 +19,11 @@ QrotorMavlink::~QrotorMavlink() = default;
 
 void QrotorMavlink::recv_message(const mavlink_message_t *message,
                                  const Framing framing) {
-  printf("Got message %u, len: %u, framing: %d\n", message->msgid, message->len,
-         int(framing));
-  msg_buffer_queue.push(*message);
-  // message_id = message->msgid;
+  // printf("Got message %u, len: %u, framing: %d\n", message->msgid, message->len,
+  //        int(framing));
+  message_buffer_mutex_.lock();       
+  msg_buffer_queue_.push(*message);
+  message_buffer_mutex_.unlock();
   cond.notify_one();
 }
 
@@ -33,8 +34,8 @@ bool QrotorMavlink::wait_one() {
 }
 
 void QrotorMavlink::decode() {
-  while (!msg_buffer_queue.empty()) {
-    mavlink_message_t buf_msg = msg_buffer_queue.front();
+  while (!msg_buffer_queue_.empty()) {
+    mavlink_message_t buf_msg = msg_buffer_queue_.front();
 
     switch (buf_msg.msgid) {
     case mavlink_msg::HEARTBEAT::MSG_ID:
@@ -49,11 +50,14 @@ void QrotorMavlink::decode() {
     case mavlink_msg::BATTERY_STATUS::MSG_ID:
       this->deserialize_battery_status(buf_msg);
       break;
+    case mavlink_msg::OFFBOARD_CONTROL::MSG_ID:
+      this->deserialize_offboard_control(buf_msg);
+      break;
 
     default:
       break;
     }
-    msg_buffer_queue.pop();
+    msg_buffer_queue_.pop();
   }
 }
 
@@ -126,11 +130,25 @@ void QrotorMavlink::send_battery_status(const uint16_t voltage,
   client->send_message(batt);
 }
 
-mavlink_msg::HEARTBEAT QrotorMavlink::deserialize_heartbeat(mavlink_message_t msg) {
+void QrotorMavlink::send_offboard_control(const uint8_t mode, const float x,
+                                          const float y, const float z,
+                                          const float thrust, const float yaw) {
+  mavlink_msg::OFFBOARD_CONTROL offb_ctrl = {};
+  offb_ctrl.mode = mode;
+  offb_ctrl.x = x;
+  offb_ctrl.y = y;
+  offb_ctrl.z = z;
+  offb_ctrl.thrust = thrust;
+  offb_ctrl.yaw = yaw;
+  client->send_message(offb_ctrl);
+}
+
+mavlink_msg::HEARTBEAT
+QrotorMavlink::deserialize_heartbeat(mavlink_message_t msg) {
   mavlink::MsgMap map(msg);
   mavlink_msg::HEARTBEAT s;
   s.deserialize(map);
-  std::cout << s.to_yaml() << std::endl;
+  // std::cout << s.to_yaml() << std::endl;
   return s;
 }
 
@@ -139,7 +157,7 @@ QrotorMavlink::deserialize_attitude_quaternion(mavlink_message_t msg) {
   mavlink::MsgMap map(msg);
   mavlink_msg::ATTITUDE_QUATERNION s;
   s.deserialize(map);
-  std::cout << s.to_yaml() << std::endl;
+  // std::cout << s.to_yaml() << std::endl;
   return s;
 }
 
@@ -147,15 +165,25 @@ mavlink_msg::SCALED_IMU QrotorMavlink::deserialize_imu(mavlink_message_t msg) {
   mavlink::MsgMap map(msg);
   mavlink_msg::SCALED_IMU s;
   s.deserialize(map);
-  std::cout << s.to_yaml() << std::endl;
+  // std::cout << s.to_yaml() << std::endl;
   return s;
 }
 
-mavlink_msg::BATTERY_STATUS QrotorMavlink::deserialize_battery_status(mavlink_message_t msg) {
+mavlink_msg::BATTERY_STATUS
+QrotorMavlink::deserialize_battery_status(mavlink_message_t msg) {
   mavlink::MsgMap map(msg);
   mavlink_msg::BATTERY_STATUS s;
   s.deserialize(map);
-  std::cout << s.to_yaml() << std::endl;
+  // std::cout << s.to_yaml() << std::endl;
+  return s;
+}
+
+mavlink_msg::OFFBOARD_CONTROL
+QrotorMavlink::deserialize_offboard_control(mavlink_message_t msg) {
+  mavlink::MsgMap map(msg);
+  mavlink_msg::OFFBOARD_CONTROL s;
+  s.deserialize(map);
+  // std::cout << s.to_yaml() << std::endl;
   return s;
 }
 
