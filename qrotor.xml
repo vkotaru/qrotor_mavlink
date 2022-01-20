@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<mavlink>
+  <include>minimal.xml</include>
+  <version>3</version>
+  <dialect>0</dialect>
+  <enums>
+    <enum name="OFFBOARD_CONTROL_MODE">
+      <entry value="0" name="MODE_PASS_THROUGH">
+        <description>Pass moment values in [Nm] directly to the mixer</description>
+      </entry>
+      <entry value="1" name="MODE_THRUST_VECTOR_YAW">
+        <description>Command thrust vector (Fx, Fy, Fz) in newtons, and yaw setpoint in [rad]</description>
+      </entry>
+      <entry value="2" name="MODE_THRUST_VECTOR_YAWRATE">
+        <description>Command thrust vector (Fx, Fy, Fz) in newtons, and yaw-rate setpoint in [rad/s]</description>
+      </entry>
+      <entry value="3" name="MODE_ROLL_PITCH_YAWRATE_THRUST">
+        <description>Command roll angle, pitch angle, yaw rate, and thrust norm in SI units</description>
+      </entry>
+      <entry value="4" name="MODE_ROLLRATE_PITCHTATE_YAWRATE_THRUST">
+        <description>Command roll angle rate, pitch angle rate, yaw rate, and thrust norm in SI units</description>
+      </entry>
+      <entry value="5" name="MODE_POSITION_TARGET_YAW">
+        <description>Command position target in meters and yaw in SI units</description>
+      </entry>
+    </enum>
+  </enums>
+  <messages>
+    <message id="180" name="OFFBOARD_CONTROL">
+      <field type="uint32_t" name="onboard_control_sensors_present" enum="OFFBOARD_CONTROL_MODE" display="bitmask" print_format="0x%04x">Bitmap showing which onboard controllers and sensors are present. Value of 0: not present. Value of 1: present.</field>
+    </message>
+  </messages>
+</mavlink>
