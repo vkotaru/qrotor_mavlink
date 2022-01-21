@@ -58,6 +58,15 @@ public:
     message_buffer_mutex_.unlock();
   }
 
+  template <typename T> void send_message(T msg) { client->send_message(msg); }
+  template <typename T> T deserialize_message(mavlink_message_t msg) {
+    mavlink::MsgMap map(msg);
+    T s;
+    s.deserialize(map);
+    // std::cout << s.to_yaml() << std::endl;
+    return s;
+  }
+
   /* send mavlink messages */
   void send_heartbeat(const uint8_t base_mode, const uint32_t custom_mode,
                       const uint8_t system_status);
@@ -70,6 +79,11 @@ public:
   void send_offboard_control(const uint8_t mode, const float x, const float y,
                              const float z, const float thrust,
                              const float yaw);
+  void
+  send_odometry(const uint64_t time_us, const uint8_t frame_id,
+                const uint8_t child_frame_id, const Eigen::Vector3f &position,
+                const Eigen::Quaternionf &quat, const Eigen::Vector3f &velocity,
+                const Eigen::Vector3f &ang_vel, const uint8_t estimator_type);
 
   /* handle mavlink messages */
   mavlink_msg::HEARTBEAT deserialize_heartbeat(mavlink_message_t msg);
@@ -79,6 +93,7 @@ public:
   mavlink_msg::BATTERY_STATUS deserialize_battery_status(mavlink_message_t msg);
   mavlink_msg::OFFBOARD_CONTROL
   deserialize_offboard_control(mavlink_message_t msg);
+  mavlink_msg::ODOMETRY deserialize_odometry(mavlink_message_t msg);
 };
 
 } // namespace qrotor_mavlink

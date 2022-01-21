@@ -19,9 +19,10 @@ QrotorMavlink::~QrotorMavlink() = default;
 
 void QrotorMavlink::recv_message(const mavlink_message_t *message,
                                  const Framing framing) {
-  // printf("Got message %u, len: %u, framing: %d\n", message->msgid, message->len,
+  // printf("Got message %u, len: %u, framing: %d\n", message->msgid,
+  // message->len,
   //        int(framing));
-  message_buffer_mutex_.lock();       
+  message_buffer_mutex_.lock();
   msg_buffer_queue_.push(*message);
   message_buffer_mutex_.unlock();
   cond.notify_one();
@@ -143,6 +144,31 @@ void QrotorMavlink::send_offboard_control(const uint8_t mode, const float x,
   client->send_message(offb_ctrl);
 }
 
+void QrotorMavlink::send_odometry(
+    const uint64_t time_us, const uint8_t frame_id,
+    const uint8_t child_frame_id, const Eigen::Vector3f &position,
+    const Eigen::Quaternionf &quat, const Eigen::Vector3f &velocity,
+    const Eigen::Vector3f &ang_vel, const uint8_t estimator_type) {
+  mavlink_msg::ODOMETRY odom = {};
+  odom.time_usec = time_us;
+  odom.frame_id = frame_id;
+  odom.child_frame_id = child_frame_id;
+  odom.x = position(0);
+  odom.y = position(1);
+  odom.z = position(2);
+  odom.q[0] = quat.w();
+  odom.q[1] = quat.x();
+  odom.q[2] = quat.y();
+  odom.q[3] = quat.z();
+  odom.vx = velocity(0);
+  odom.vy = velocity(1);
+  odom.vz = velocity(2);
+  odom.rollspeed = ang_vel(0);
+  odom.pitchspeed = ang_vel(1);
+  odom.yawspeed = ang_vel(2);
+  client->send_message(odom);
+}
+
 mavlink_msg::HEARTBEAT
 QrotorMavlink::deserialize_heartbeat(mavlink_message_t msg) {
   mavlink::MsgMap map(msg);
@@ -182,6 +208,15 @@ mavlink_msg::OFFBOARD_CONTROL
 QrotorMavlink::deserialize_offboard_control(mavlink_message_t msg) {
   mavlink::MsgMap map(msg);
   mavlink_msg::OFFBOARD_CONTROL s;
+  s.deserialize(map);
+  // std::cout << s.to_yaml() << std::endl;
+  return s;
+}
+
+mavlink_msg::ODOMETRY
+QrotorMavlink::deserialize_odometry(mavlink_message_t msg) {
+  mavlink::MsgMap map(msg);
+  mavlink_msg::ODOMETRY s;
   s.deserialize(map);
   // std::cout << s.to_yaml() << std::endl;
   return s;
