@@ -32,6 +32,7 @@ private:
 
   mavlink_status_t status;
   bool initialized = false;
+  bool udp_client_created = false;
 
   mavconn::MAVConnInterface::Ptr server, client;
 

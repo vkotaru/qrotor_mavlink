@@ -11,8 +11,15 @@ QrotorMavlink::QrotorMavlink(uint8_t system_id, uint8_t component_id,
                              std::string bind_host, unsigned short bind_port,
                              std::string remote_host,
                              unsigned short remote_port) {
-  client = std::make_shared<MAVConnUDP>(system_id, component_id, bind_host,
-                                        bind_port, remote_host, remote_port);
+
+  try {
+    client = std::make_shared<MAVConnUDP>(system_id, component_id, bind_host,
+                                          bind_port, remote_host, remote_port);
+    udp_client_created = true;
+  } catch (const std::exception &e) {
+    std::cout << " Exception in QrotorMavlink::init: '" << e.what() << "'\n";
+    udp_client_created = false;
+  }
 }
 
 QrotorMavlink::~QrotorMavlink() = default;
