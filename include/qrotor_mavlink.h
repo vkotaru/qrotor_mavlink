@@ -90,8 +90,8 @@ public:
   mavlink_msg::HEARTBEAT deserialize_heartbeat(mavlink_message_t msg);
   mavlink_msg::ATTITUDE_QUATERNION
   deserialize_attitude_quaternion(mavlink_message_t msg);
-  mavlink_msg::SCALED_IMU deserialize_imu(mavlink_message_t msg);
-  mavlink_msg::BATTERY_STATUS deserialize_battery_status(mavlink_message_t msg);
+  mavlink_msg::ONBOARD_IMU deserialize_imu(mavlink_message_t msg);
+  mavlink_msg::POWER_READINGS deserialize_battery_status(mavlink_message_t msg);
   mavlink_msg::OFFBOARD_CONTROL
   deserialize_offboard_control(mavlink_message_t msg);
   mavlink_msg::ODOMETRY deserialize_odometry(mavlink_message_t msg);

@@ -27,8 +27,7 @@ QrotorMavlink::~QrotorMavlink() = default;
 void QrotorMavlink::recv_message(const mavlink_message_t *message,
                                  const Framing framing) {
   // printf("Got message %u, len: %u, framing: %d\n", message->msgid,
-  // message->len,
-  //        int(framing));
+  // message->len, int(framing));
   message_buffer_mutex_.lock();
   msg_buffer_queue_.push(*message);
   message_buffer_mutex_.unlock();
@@ -100,8 +99,8 @@ void QrotorMavlink::send_imu(uint64_t timestamp_us,
                              const Eigen::Vector3f &gyro,
                              const Eigen::Vector3f &mag) {
 
-  mavlink_msg::SCALED_IMU imu = {};
-  imu.time_boot_ms = timestamp_us;
+  mavlink::qrotor::msg::ONBOARD_IMU imu = {};
+  imu.time_usec = timestamp_us;
   imu.xacc = accel(0);
   imu.yacc = accel(1);
   imu.zacc = accel(2);
@@ -132,9 +131,9 @@ void QrotorMavlink::send_attitude_quaternion(
 
 void QrotorMavlink::send_battery_status(const uint16_t voltage,
                                         const int16_t current) {
-  mavlink_msg::BATTERY_STATUS batt = {};
-  batt.voltages[0] = (voltage);
-  batt.current_battery = current;
+  mavlink::qrotor::msg::POWER_READINGS batt = {};
+  // batt.voltages[0] = (voltage);
+  // batt.current_battery = current;
   client->send_message(batt);
 }
 
@@ -173,6 +172,7 @@ void QrotorMavlink::send_odometry(
   odom.rollspeed = ang_vel(0);
   odom.pitchspeed = ang_vel(1);
   odom.yawspeed = ang_vel(2);
+  odom.estimator_type = estimator_type;
   client->send_message(odom);
 }
 
@@ -194,18 +194,18 @@ QrotorMavlink::deserialize_attitude_quaternion(mavlink_message_t msg) {
   return s;
 }
 
-mavlink_msg::SCALED_IMU QrotorMavlink::deserialize_imu(mavlink_message_t msg) {
+mavlink_msg::ONBOARD_IMU QrotorMavlink::deserialize_imu(mavlink_message_t msg) {
   mavlink::MsgMap map(msg);
-  mavlink_msg::SCALED_IMU s;
+  mavlink_msg::ONBOARD_IMU s;
   s.deserialize(map);
   // std::cout << s.to_yaml() << std::endl;
   return s;
 }
 
-mavlink_msg::BATTERY_STATUS
+mavlink_msg::POWER_READINGS
 QrotorMavlink::deserialize_battery_status(mavlink_message_t msg) {
   mavlink::MsgMap map(msg);
-  mavlink_msg::BATTERY_STATUS s;
+  mavlink_msg::POWER_READINGS s;
   s.deserialize(map);
   // std::cout << s.to_yaml() << std::endl;
   return s;

@@ -53,6 +53,7 @@ void MAVConnInterface::init_msg_entry()
 	for (auto &e : mavlink::icarous::MESSAGE_ENTRIES)               load("icarous", e);
 	for (auto &e : mavlink::matrixpilot::MESSAGE_ENTRIES)           load("matrixpilot", e);
 	for (auto &e : mavlink::paparazzi::MESSAGE_ENTRIES)             load("paparazzi", e);
+	for (auto &e : mavlink::qrotor::MESSAGE_ENTRIES)             		load("qrotor", e);
 	for (auto &e : mavlink::standard::MESSAGE_ENTRIES)              load("standard", e);
 	for (auto &e : mavlink::uAvionix::MESSAGE_ENTRIES)              load("uAvionix", e);
 	for (auto &e : mavlink::ualberta::MESSAGE_ENTRIES)              load("ualberta", e);
@@ -70,6 +71,7 @@ std::vector<std::string> MAVConnInterface::get_known_dialects()
 		"icarous",
 		"matrixpilot",
 		"paparazzi",
+		"qrotor",
 		"standard",
 		"uAvionix",
 		"ualberta",

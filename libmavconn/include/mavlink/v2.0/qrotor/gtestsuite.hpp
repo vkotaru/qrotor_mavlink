@@ -93,3 +93,173 @@ TEST(qrotor_interop, OFFBOARD_CONTROL)
 #endif
 }
 #endif
+
+TEST(qrotor, POWER_READINGS)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::qrotor::msg::POWER_READINGS packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.voltage = 185.0;
+    packet_in.v_adc = 93372036854776311ULL;
+    packet_in.current = 213.0;
+    packet_in.c_adc = 93372036854776815ULL;
+
+    mavlink::qrotor::msg::POWER_READINGS packet1{};
+    mavlink::qrotor::msg::POWER_READINGS packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet1.voltage, packet2.voltage);
+    EXPECT_EQ(packet1.v_adc, packet2.v_adc);
+    EXPECT_EQ(packet1.current, packet2.current);
+    EXPECT_EQ(packet1.c_adc, packet2.c_adc);
+}
+
+#ifdef TEST_INTEROP
+TEST(qrotor_interop, POWER_READINGS)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_power_readings_t packet_c {
+         93372036854775807ULL, 93372036854776311ULL, 93372036854776815ULL, 185.0, 213.0
+    };
+
+    mavlink::qrotor::msg::POWER_READINGS packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.voltage = 185.0;
+    packet_in.v_adc = 93372036854776311ULL;
+    packet_in.current = 213.0;
+    packet_in.c_adc = 93372036854776815ULL;
+
+    mavlink::qrotor::msg::POWER_READINGS packet2{};
+
+    mavlink_msg_power_readings_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet_in.voltage, packet2.voltage);
+    EXPECT_EQ(packet_in.v_adc, packet2.v_adc);
+    EXPECT_EQ(packet_in.current, packet2.current);
+    EXPECT_EQ(packet_in.c_adc, packet2.c_adc);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif
+
+TEST(qrotor, ONBOARD_IMU)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::qrotor::msg::ONBOARD_IMU packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.xacc = 73.0;
+    packet_in.yacc = 101.0;
+    packet_in.zacc = 129.0;
+    packet_in.xgyro = 157.0;
+    packet_in.ygyro = 185.0;
+    packet_in.zgyro = 213.0;
+    packet_in.xmag = 241.0;
+    packet_in.ymag = 269.0;
+    packet_in.zmag = 297.0;
+
+    mavlink::qrotor::msg::ONBOARD_IMU packet1{};
+    mavlink::qrotor::msg::ONBOARD_IMU packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet1.xacc, packet2.xacc);
+    EXPECT_EQ(packet1.yacc, packet2.yacc);
+    EXPECT_EQ(packet1.zacc, packet2.zacc);
+    EXPECT_EQ(packet1.xgyro, packet2.xgyro);
+    EXPECT_EQ(packet1.ygyro, packet2.ygyro);
+    EXPECT_EQ(packet1.zgyro, packet2.zgyro);
+    EXPECT_EQ(packet1.xmag, packet2.xmag);
+    EXPECT_EQ(packet1.ymag, packet2.ymag);
+    EXPECT_EQ(packet1.zmag, packet2.zmag);
+}
+
+#ifdef TEST_INTEROP
+TEST(qrotor_interop, ONBOARD_IMU)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_onboard_imu_t packet_c {
+         93372036854775807ULL, 73.0, 101.0, 129.0, 157.0, 185.0, 213.0, 241.0, 269.0, 297.0
+    };
+
+    mavlink::qrotor::msg::ONBOARD_IMU packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.xacc = 73.0;
+    packet_in.yacc = 101.0;
+    packet_in.zacc = 129.0;
+    packet_in.xgyro = 157.0;
+    packet_in.ygyro = 185.0;
+    packet_in.zgyro = 213.0;
+    packet_in.xmag = 241.0;
+    packet_in.ymag = 269.0;
+    packet_in.zmag = 297.0;
+
+    mavlink::qrotor::msg::ONBOARD_IMU packet2{};
+
+    mavlink_msg_onboard_imu_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet_in.xacc, packet2.xacc);
+    EXPECT_EQ(packet_in.yacc, packet2.yacc);
+    EXPECT_EQ(packet_in.zacc, packet2.zacc);
+    EXPECT_EQ(packet_in.xgyro, packet2.xgyro);
+    EXPECT_EQ(packet_in.ygyro, packet2.ygyro);
+    EXPECT_EQ(packet_in.zgyro, packet2.zgyro);
+    EXPECT_EQ(packet_in.xmag, packet2.xmag);
+    EXPECT_EQ(packet_in.ymag, packet2.ymag);
+    EXPECT_EQ(packet_in.zmag, packet2.zmag);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif
