@@ -7,7 +7,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 include(EnableCXX11)
-include(MavrosMavlink)
+# include(MavrosMavlink)
 
 include_directories(
   include
