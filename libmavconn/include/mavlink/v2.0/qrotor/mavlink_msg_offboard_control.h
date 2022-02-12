@@ -5,6 +5,7 @@
 
 
 typedef struct __mavlink_offboard_control_t {
+ float w; /*<   Extra channel */
  float x; /*<  X-channel, (typically, thrust in X-direction [N])*/
  float y; /*<  Y-channel, (typically, thrust in Y-direction [N])*/
  float z; /*<  Z-channel, (typically, thrust in Z-direction [N])*/
@@ -13,13 +14,13 @@ typedef struct __mavlink_offboard_control_t {
  uint8_t mode; /*<  Offboard control mode, see OFFBOARD_CONTROL_MODE*/
 } mavlink_offboard_control_t;
 
-#define MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN 21
-#define MAVLINK_MSG_ID_OFFBOARD_CONTROL_MIN_LEN 21
-#define MAVLINK_MSG_ID_180_LEN 21
-#define MAVLINK_MSG_ID_180_MIN_LEN 21
+#define MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN 25
+#define MAVLINK_MSG_ID_OFFBOARD_CONTROL_MIN_LEN 25
+#define MAVLINK_MSG_ID_180_LEN 25
+#define MAVLINK_MSG_ID_180_MIN_LEN 25
 
-#define MAVLINK_MSG_ID_OFFBOARD_CONTROL_CRC 21
-#define MAVLINK_MSG_ID_180_CRC 21
+#define MAVLINK_MSG_ID_OFFBOARD_CONTROL_CRC 99
+#define MAVLINK_MSG_ID_180_CRC 99
 
 
 
@@ -27,25 +28,27 @@ typedef struct __mavlink_offboard_control_t {
 #define MAVLINK_MESSAGE_INFO_OFFBOARD_CONTROL { \
     180, \
     "OFFBOARD_CONTROL", \
-    6, \
-    {  { "mode", NULL, MAVLINK_TYPE_UINT8_T, 0, 20, offsetof(mavlink_offboard_control_t, mode) }, \
-         { "x", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_offboard_control_t, x) }, \
-         { "y", NULL, MAVLINK_TYPE_FLOAT, 0, 4, offsetof(mavlink_offboard_control_t, y) }, \
-         { "z", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_offboard_control_t, z) }, \
-         { "thrust", NULL, MAVLINK_TYPE_FLOAT, 0, 12, offsetof(mavlink_offboard_control_t, thrust) }, \
-         { "yaw", NULL, MAVLINK_TYPE_FLOAT, 0, 16, offsetof(mavlink_offboard_control_t, yaw) }, \
+    7, \
+    {  { "mode", NULL, MAVLINK_TYPE_UINT8_T, 0, 24, offsetof(mavlink_offboard_control_t, mode) }, \
+         { "w", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_offboard_control_t, w) }, \
+         { "x", NULL, MAVLINK_TYPE_FLOAT, 0, 4, offsetof(mavlink_offboard_control_t, x) }, \
+         { "y", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_offboard_control_t, y) }, \
+         { "z", NULL, MAVLINK_TYPE_FLOAT, 0, 12, offsetof(mavlink_offboard_control_t, z) }, \
+         { "thrust", NULL, MAVLINK_TYPE_FLOAT, 0, 16, offsetof(mavlink_offboard_control_t, thrust) }, \
+         { "yaw", NULL, MAVLINK_TYPE_FLOAT, 0, 20, offsetof(mavlink_offboard_control_t, yaw) }, \
          } \
 }
 #else
 #define MAVLINK_MESSAGE_INFO_OFFBOARD_CONTROL { \
     "OFFBOARD_CONTROL", \
-    6, \
-    {  { "mode", NULL, MAVLINK_TYPE_UINT8_T, 0, 20, offsetof(mavlink_offboard_control_t, mode) }, \
-         { "x", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_offboard_control_t, x) }, \
-         { "y", NULL, MAVLINK_TYPE_FLOAT, 0, 4, offsetof(mavlink_offboard_control_t, y) }, \
-         { "z", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_offboard_control_t, z) }, \
-         { "thrust", NULL, MAVLINK_TYPE_FLOAT, 0, 12, offsetof(mavlink_offboard_control_t, thrust) }, \
-         { "yaw", NULL, MAVLINK_TYPE_FLOAT, 0, 16, offsetof(mavlink_offboard_control_t, yaw) }, \
+    7, \
+    {  { "mode", NULL, MAVLINK_TYPE_UINT8_T, 0, 24, offsetof(mavlink_offboard_control_t, mode) }, \
+         { "w", NULL, MAVLINK_TYPE_FLOAT, 0, 0, offsetof(mavlink_offboard_control_t, w) }, \
+         { "x", NULL, MAVLINK_TYPE_FLOAT, 0, 4, offsetof(mavlink_offboard_control_t, x) }, \
+         { "y", NULL, MAVLINK_TYPE_FLOAT, 0, 8, offsetof(mavlink_offboard_control_t, y) }, \
+         { "z", NULL, MAVLINK_TYPE_FLOAT, 0, 12, offsetof(mavlink_offboard_control_t, z) }, \
+         { "thrust", NULL, MAVLINK_TYPE_FLOAT, 0, 16, offsetof(mavlink_offboard_control_t, thrust) }, \
+         { "yaw", NULL, MAVLINK_TYPE_FLOAT, 0, 20, offsetof(mavlink_offboard_control_t, yaw) }, \
          } \
 }
 #endif
@@ -57,6 +60,7 @@ typedef struct __mavlink_offboard_control_t {
  * @param msg The MAVLink message to compress the data into
  *
  * @param mode  Offboard control mode, see OFFBOARD_CONTROL_MODE
+ * @param w   Extra channel 
  * @param x  X-channel, (typically, thrust in X-direction [N])
  * @param y  Y-channel, (typically, thrust in Y-direction [N])
  * @param z  Z-channel, (typically, thrust in Z-direction [N])
@@ -65,20 +69,22 @@ typedef struct __mavlink_offboard_control_t {
  * @return length of the message in bytes (excluding serial stream start sign)
  */
 static inline uint16_t mavlink_msg_offboard_control_pack(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg,
-                               uint8_t mode, float x, float y, float z, float thrust, float yaw)
+                               uint8_t mode, float w, float x, float y, float z, float thrust, float yaw)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN];
-    _mav_put_float(buf, 0, x);
-    _mav_put_float(buf, 4, y);
-    _mav_put_float(buf, 8, z);
-    _mav_put_float(buf, 12, thrust);
-    _mav_put_float(buf, 16, yaw);
-    _mav_put_uint8_t(buf, 20, mode);
+    _mav_put_float(buf, 0, w);
+    _mav_put_float(buf, 4, x);
+    _mav_put_float(buf, 8, y);
+    _mav_put_float(buf, 12, z);
+    _mav_put_float(buf, 16, thrust);
+    _mav_put_float(buf, 20, yaw);
+    _mav_put_uint8_t(buf, 24, mode);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN);
 #else
     mavlink_offboard_control_t packet;
+    packet.w = w;
     packet.x = x;
     packet.y = y;
     packet.z = z;
@@ -100,6 +106,7 @@ static inline uint16_t mavlink_msg_offboard_control_pack(uint8_t system_id, uint
  * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
  * @param mode  Offboard control mode, see OFFBOARD_CONTROL_MODE
+ * @param w   Extra channel 
  * @param x  X-channel, (typically, thrust in X-direction [N])
  * @param y  Y-channel, (typically, thrust in Y-direction [N])
  * @param z  Z-channel, (typically, thrust in Z-direction [N])
@@ -109,20 +116,22 @@ static inline uint16_t mavlink_msg_offboard_control_pack(uint8_t system_id, uint
  */
 static inline uint16_t mavlink_msg_offboard_control_pack_chan(uint8_t system_id, uint8_t component_id, uint8_t chan,
                                mavlink_message_t* msg,
-                                   uint8_t mode,float x,float y,float z,float thrust,float yaw)
+                                   uint8_t mode,float w,float x,float y,float z,float thrust,float yaw)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN];
-    _mav_put_float(buf, 0, x);
-    _mav_put_float(buf, 4, y);
-    _mav_put_float(buf, 8, z);
-    _mav_put_float(buf, 12, thrust);
-    _mav_put_float(buf, 16, yaw);
-    _mav_put_uint8_t(buf, 20, mode);
+    _mav_put_float(buf, 0, w);
+    _mav_put_float(buf, 4, x);
+    _mav_put_float(buf, 8, y);
+    _mav_put_float(buf, 12, z);
+    _mav_put_float(buf, 16, thrust);
+    _mav_put_float(buf, 20, yaw);
+    _mav_put_uint8_t(buf, 24, mode);
 
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN);
 #else
     mavlink_offboard_control_t packet;
+    packet.w = w;
     packet.x = x;
     packet.y = y;
     packet.z = z;
@@ -147,7 +156,7 @@ static inline uint16_t mavlink_msg_offboard_control_pack_chan(uint8_t system_id,
  */
 static inline uint16_t mavlink_msg_offboard_control_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_offboard_control_t* offboard_control)
 {
-    return mavlink_msg_offboard_control_pack(system_id, component_id, msg, offboard_control->mode, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->thrust, offboard_control->yaw);
+    return mavlink_msg_offboard_control_pack(system_id, component_id, msg, offboard_control->mode, offboard_control->w, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->thrust, offboard_control->yaw);
 }
 
 /**
@@ -161,7 +170,7 @@ static inline uint16_t mavlink_msg_offboard_control_encode(uint8_t system_id, ui
  */
 static inline uint16_t mavlink_msg_offboard_control_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_offboard_control_t* offboard_control)
 {
-    return mavlink_msg_offboard_control_pack_chan(system_id, component_id, chan, msg, offboard_control->mode, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->thrust, offboard_control->yaw);
+    return mavlink_msg_offboard_control_pack_chan(system_id, component_id, chan, msg, offboard_control->mode, offboard_control->w, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->thrust, offboard_control->yaw);
 }
 
 /**
@@ -169,6 +178,7 @@ static inline uint16_t mavlink_msg_offboard_control_encode_chan(uint8_t system_i
  * @param chan MAVLink channel to send the message
  *
  * @param mode  Offboard control mode, see OFFBOARD_CONTROL_MODE
+ * @param w   Extra channel 
  * @param x  X-channel, (typically, thrust in X-direction [N])
  * @param y  Y-channel, (typically, thrust in Y-direction [N])
  * @param z  Z-channel, (typically, thrust in Z-direction [N])
@@ -177,20 +187,22 @@ static inline uint16_t mavlink_msg_offboard_control_encode_chan(uint8_t system_i
  */
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-static inline void mavlink_msg_offboard_control_send(mavlink_channel_t chan, uint8_t mode, float x, float y, float z, float thrust, float yaw)
+static inline void mavlink_msg_offboard_control_send(mavlink_channel_t chan, uint8_t mode, float w, float x, float y, float z, float thrust, float yaw)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char buf[MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN];
-    _mav_put_float(buf, 0, x);
-    _mav_put_float(buf, 4, y);
-    _mav_put_float(buf, 8, z);
-    _mav_put_float(buf, 12, thrust);
-    _mav_put_float(buf, 16, yaw);
-    _mav_put_uint8_t(buf, 20, mode);
+    _mav_put_float(buf, 0, w);
+    _mav_put_float(buf, 4, x);
+    _mav_put_float(buf, 8, y);
+    _mav_put_float(buf, 12, z);
+    _mav_put_float(buf, 16, thrust);
+    _mav_put_float(buf, 20, yaw);
+    _mav_put_uint8_t(buf, 24, mode);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_OFFBOARD_CONTROL, buf, MAVLINK_MSG_ID_OFFBOARD_CONTROL_MIN_LEN, MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN, MAVLINK_MSG_ID_OFFBOARD_CONTROL_CRC);
 #else
     mavlink_offboard_control_t packet;
+    packet.w = w;
     packet.x = x;
     packet.y = y;
     packet.z = z;
@@ -210,7 +222,7 @@ static inline void mavlink_msg_offboard_control_send(mavlink_channel_t chan, uin
 static inline void mavlink_msg_offboard_control_send_struct(mavlink_channel_t chan, const mavlink_offboard_control_t* offboard_control)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-    mavlink_msg_offboard_control_send(chan, offboard_control->mode, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->thrust, offboard_control->yaw);
+    mavlink_msg_offboard_control_send(chan, offboard_control->mode, offboard_control->w, offboard_control->x, offboard_control->y, offboard_control->z, offboard_control->thrust, offboard_control->yaw);
 #else
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_OFFBOARD_CONTROL, (const char *)offboard_control, MAVLINK_MSG_ID_OFFBOARD_CONTROL_MIN_LEN, MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN, MAVLINK_MSG_ID_OFFBOARD_CONTROL_CRC);
 #endif
@@ -224,20 +236,22 @@ static inline void mavlink_msg_offboard_control_send_struct(mavlink_channel_t ch
   is usually the receive buffer for the channel, and allows a reply to an
   incoming message with minimum stack space usage.
  */
-static inline void mavlink_msg_offboard_control_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t mode, float x, float y, float z, float thrust, float yaw)
+static inline void mavlink_msg_offboard_control_send_buf(mavlink_message_t *msgbuf, mavlink_channel_t chan,  uint8_t mode, float w, float x, float y, float z, float thrust, float yaw)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
     char *buf = (char *)msgbuf;
-    _mav_put_float(buf, 0, x);
-    _mav_put_float(buf, 4, y);
-    _mav_put_float(buf, 8, z);
-    _mav_put_float(buf, 12, thrust);
-    _mav_put_float(buf, 16, yaw);
-    _mav_put_uint8_t(buf, 20, mode);
+    _mav_put_float(buf, 0, w);
+    _mav_put_float(buf, 4, x);
+    _mav_put_float(buf, 8, y);
+    _mav_put_float(buf, 12, z);
+    _mav_put_float(buf, 16, thrust);
+    _mav_put_float(buf, 20, yaw);
+    _mav_put_uint8_t(buf, 24, mode);
 
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_OFFBOARD_CONTROL, buf, MAVLINK_MSG_ID_OFFBOARD_CONTROL_MIN_LEN, MAVLINK_MSG_ID_OFFBOARD_CONTROL_LEN, MAVLINK_MSG_ID_OFFBOARD_CONTROL_CRC);
 #else
     mavlink_offboard_control_t *packet = (mavlink_offboard_control_t *)msgbuf;
+    packet->w = w;
     packet->x = x;
     packet->y = y;
     packet->z = z;
@@ -262,7 +276,17 @@ static inline void mavlink_msg_offboard_control_send_buf(mavlink_message_t *msgb
  */
 static inline uint8_t mavlink_msg_offboard_control_get_mode(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_uint8_t(msg,  20);
+    return _MAV_RETURN_uint8_t(msg,  24);
+}
+
+/**
+ * @brief Get field w from offboard_control message
+ *
+ * @return   Extra channel 
+ */
+static inline float mavlink_msg_offboard_control_get_w(const mavlink_message_t* msg)
+{
+    return _MAV_RETURN_float(msg,  0);
 }
 
 /**
@@ -272,7 +296,7 @@ static inline uint8_t mavlink_msg_offboard_control_get_mode(const mavlink_messag
  */
 static inline float mavlink_msg_offboard_control_get_x(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_float(msg,  0);
+    return _MAV_RETURN_float(msg,  4);
 }
 
 /**
@@ -282,7 +306,7 @@ static inline float mavlink_msg_offboard_control_get_x(const mavlink_message_t* 
  */
 static inline float mavlink_msg_offboard_control_get_y(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_float(msg,  4);
+    return _MAV_RETURN_float(msg,  8);
 }
 
 /**
@@ -292,7 +316,7 @@ static inline float mavlink_msg_offboard_control_get_y(const mavlink_message_t* 
  */
 static inline float mavlink_msg_offboard_control_get_z(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_float(msg,  8);
+    return _MAV_RETURN_float(msg,  12);
 }
 
 /**
@@ -302,7 +326,7 @@ static inline float mavlink_msg_offboard_control_get_z(const mavlink_message_t* 
  */
 static inline float mavlink_msg_offboard_control_get_thrust(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_float(msg,  12);
+    return _MAV_RETURN_float(msg,  16);
 }
 
 /**
@@ -312,7 +336,7 @@ static inline float mavlink_msg_offboard_control_get_thrust(const mavlink_messag
  */
 static inline float mavlink_msg_offboard_control_get_yaw(const mavlink_message_t* msg)
 {
-    return _MAV_RETURN_float(msg,  16);
+    return _MAV_RETURN_float(msg,  20);
 }
 
 /**
@@ -324,6 +348,7 @@ static inline float mavlink_msg_offboard_control_get_yaw(const mavlink_message_t
 static inline void mavlink_msg_offboard_control_decode(const mavlink_message_t* msg, mavlink_offboard_control_t* offboard_control)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
+    offboard_control->w = mavlink_msg_offboard_control_get_w(msg);
     offboard_control->x = mavlink_msg_offboard_control_get_x(msg);
     offboard_control->y = mavlink_msg_offboard_control_get_y(msg);
     offboard_control->z = mavlink_msg_offboard_control_get_z(msg);

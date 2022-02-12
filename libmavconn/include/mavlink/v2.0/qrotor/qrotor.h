@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 #ifndef MAVLINK_MESSAGE_CRCS
-#define MAVLINK_MESSAGE_CRCS {{0, 50, 9, 9, 0, 0, 0}, {180, 21, 21, 21, 0, 0, 0}, {181, 60, 32, 32, 0, 0, 0}, {182, 153, 44, 44, 0, 0, 0}, {300, 217, 22, 22, 0, 0, 0}}
+#define MAVLINK_MESSAGE_CRCS {{0, 50, 9, 9, 0, 0, 0}, {180, 99, 25, 25, 0, 0, 0}, {181, 60, 32, 32, 0, 0, 0}, {182, 153, 44, 44, 0, 0, 0}, {300, 217, 22, 22, 0, 0, 0}}
 #endif
 
 #include "../protocol.h"
@@ -39,13 +39,14 @@ extern "C" {
 #define HAVE_ENUM_OFFBOARD_CONTROL_MODE
 typedef enum OFFBOARD_CONTROL_MODE
 {
-   MODE_PASS_THROUGH=0, /* Pass moment values in [Nm] directly to the mixer | */
+   MODE_PASS_THROUGH_SI=0, /* Pass moment values in [Nm] directly to the mixer | */
    MODE_THRUST_VECTOR_YAW=1, /* Command thrust vector (Fx, Fy, Fz) in newtons, and yaw setpoint in [rad] | */
    MODE_THRUST_VECTOR_YAWRATE=2, /* Command thrust vector (Fx, Fy, Fz) in newtons, and yaw-rate setpoint in [rad/s] | */
    MODE_ROLL_PITCH_YAWRATE_THRUST=3, /* Command roll angle, pitch angle, yaw rate, and thrust norm in SI units | */
    MODE_ROLLRATE_PITCHTATE_YAWRATE_THRUST=4, /* Command roll angle rate, pitch angle rate, yaw rate, and thrust norm in SI units | */
    MODE_POSITION_TARGET_YAW=5, /* Command position target in meters and yaw in SI units | */
-   OFFBOARD_CONTROL_MODE_ENUM_END=6, /*  | */
+   MODE_PASS_THROUGH_PWM=6, /* Pass PWM VALUES directly | */
+   OFFBOARD_CONTROL_MODE_ENUM_END=7, /*  | */
 } OFFBOARD_CONTROL_MODE;
 #endif
 
