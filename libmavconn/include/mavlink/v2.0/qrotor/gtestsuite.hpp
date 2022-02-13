@@ -267,3 +267,153 @@ TEST(qrotor_interop, ONBOARD_IMU)
 #endif
 }
 #endif
+
+TEST(qrotor, INPUT_SI)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::qrotor::msg::INPUT_SI packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.x = 73.0;
+    packet_in.y = 101.0;
+    packet_in.z = 129.0;
+    packet_in.thrust = 157.0;
+
+    mavlink::qrotor::msg::INPUT_SI packet1{};
+    mavlink::qrotor::msg::INPUT_SI packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet1.x, packet2.x);
+    EXPECT_EQ(packet1.y, packet2.y);
+    EXPECT_EQ(packet1.z, packet2.z);
+    EXPECT_EQ(packet1.thrust, packet2.thrust);
+}
+
+#ifdef TEST_INTEROP
+TEST(qrotor_interop, INPUT_SI)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_input_si_t packet_c {
+         93372036854775807ULL, 73.0, 101.0, 129.0, 157.0
+    };
+
+    mavlink::qrotor::msg::INPUT_SI packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.x = 73.0;
+    packet_in.y = 101.0;
+    packet_in.z = 129.0;
+    packet_in.thrust = 157.0;
+
+    mavlink::qrotor::msg::INPUT_SI packet2{};
+
+    mavlink_msg_input_si_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet_in.x, packet2.x);
+    EXPECT_EQ(packet_in.y, packet2.y);
+    EXPECT_EQ(packet_in.z, packet2.z);
+    EXPECT_EQ(packet_in.thrust, packet2.thrust);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif
+
+TEST(qrotor, INPUT_PWM)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::qrotor::msg::INPUT_PWM packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.w = 73.0;
+    packet_in.x = 101.0;
+    packet_in.y = 129.0;
+    packet_in.z = 157.0;
+
+    mavlink::qrotor::msg::INPUT_PWM packet1{};
+    mavlink::qrotor::msg::INPUT_PWM packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet1.w, packet2.w);
+    EXPECT_EQ(packet1.x, packet2.x);
+    EXPECT_EQ(packet1.y, packet2.y);
+    EXPECT_EQ(packet1.z, packet2.z);
+}
+
+#ifdef TEST_INTEROP
+TEST(qrotor_interop, INPUT_PWM)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_input_pwm_t packet_c {
+         93372036854775807ULL, 73.0, 101.0, 129.0, 157.0
+    };
+
+    mavlink::qrotor::msg::INPUT_PWM packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.w = 73.0;
+    packet_in.x = 101.0;
+    packet_in.y = 129.0;
+    packet_in.z = 157.0;
+
+    mavlink::qrotor::msg::INPUT_PWM packet2{};
+
+    mavlink_msg_input_pwm_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet_in.w, packet2.w);
+    EXPECT_EQ(packet_in.x, packet2.x);
+    EXPECT_EQ(packet_in.y, packet2.y);
+    EXPECT_EQ(packet_in.z, packet2.z);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif

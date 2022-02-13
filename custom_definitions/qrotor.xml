@@ -61,6 +61,22 @@
       <field type="float" name="ymag" units="gauss">Y Magnetic field</field>
       <field type="float" name="zmag" units="gauss">Z Magnetic field</field>
     </message>
+    <message id="183" name="INPUT_SI">
+      <description>The Final inputs applied to the drone in body frame</description>
+      <field type="uint64_t" name="time_usec" units="us">Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.</field>
+      <field type="float" name="x">X-channel, (typically, thrust in X-direction [N])</field>
+      <field type="float" name="y">Y-channel, (typically, thrust in Y-direction [N])</field>
+      <field type="float" name="z">Z-channel, (typically, thrust in Z-direction [N])</field>
+      <field type="float" name="thrust">Thrust, (typically, thrust-scale [N])</field>
+    </message>
+    <message id="184" name="INPUT_PWM">
+      <description>The Final PWM applied to the drone</description>
+      <field type="uint64_t" name="time_usec" units="us">Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.</field>
+      <field type="float" name="w">pwm1</field>
+      <field type="float" name="x">pwm2</field>
+      <field type="float" name="y">pwm3</field>
+      <field type="float" name="z">pwm4</field>
+    </message>
   </messages>
 </mavlink>
       

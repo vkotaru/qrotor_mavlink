@@ -21,7 +21,7 @@ namespace qrotor {
 /**
  * Array of msg_entry needed for @p mavlink_parse_char() (trought @p mavlink_get_msg_entry())
  */
-constexpr std::array<mavlink_msg_entry_t, 5> MESSAGE_ENTRIES {{ {0, 50, 9, 9, 0, 0, 0}, {180, 99, 25, 25, 0, 0, 0}, {181, 60, 32, 32, 0, 0, 0}, {182, 153, 44, 44, 0, 0, 0}, {300, 217, 22, 22, 0, 0, 0} }};
+constexpr std::array<mavlink_msg_entry_t, 7> MESSAGE_ENTRIES {{ {0, 50, 9, 9, 0, 0, 0}, {180, 99, 25, 25, 0, 0, 0}, {181, 60, 32, 32, 0, 0, 0}, {182, 153, 44, 44, 0, 0, 0}, {183, 208, 24, 24, 0, 0, 0}, {184, 149, 24, 24, 0, 0, 0}, {300, 217, 22, 22, 0, 0, 0} }};
 
 //! MAVLINK VERSION
 constexpr auto MAVLINK_VERSION = 3;
@@ -53,6 +53,8 @@ constexpr auto OFFBOARD_CONTROL_MODE_ENUM_END = 7;
 #include "./mavlink_msg_offboard_control.hpp"
 #include "./mavlink_msg_power_readings.hpp"
 #include "./mavlink_msg_onboard_imu.hpp"
+#include "./mavlink_msg_input_si.hpp"
+#include "./mavlink_msg_input_pwm.hpp"
 
 // base include
 #include "../minimal/minimal.hpp"
