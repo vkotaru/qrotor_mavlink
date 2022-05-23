@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(libmavconn)
 
-find_package(catkin REQUIRED)
+#find_package(catkin REQUIRED)
 #find_package(console_bridge REQUIRED)
 find_package(Boost REQUIRED COMPONENTS system)
 
