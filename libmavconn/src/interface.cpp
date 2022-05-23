@@ -18,7 +18,7 @@
 #include <set>
 #include <cassert>
 
-#include <mavconn/console_bridge_compat.h>
+//#include <mavconn/console_bridge_compat.h>
 #include <mavconn/interface.h>
 #include <mavconn/msgbuffer.h>
 #include <mavconn/serial.h>
@@ -122,7 +122,7 @@ void MAVConnInterface::log_recv(const char *pfx, mavlink_message_t &msg, Framing
 
 	const char *proto_version_str = (msg.magic == MAVLINK_STX) ? "v2.0" : "v1.0";
 
-	CONSOLE_BRIDGE_logDebug("%s%zu: recv: %s %4s Message-Id: %u [%u bytes] IDs: %u.%u Seq: %u",
+	printf("%s%zu: recv: %s %4s Message-Id: %u [%u bytes] IDs: %u.%u Seq: %u",
 			pfx, conn_id,
 			proto_version_str,
 			framing_str,
@@ -133,7 +133,7 @@ void MAVConnInterface::log_send(const char *pfx, const mavlink_message_t *msg)
 {
 	const char *proto_version_str = (msg->magic == MAVLINK_STX) ? "v2.0" : "v1.0";
 
-	CONSOLE_BRIDGE_logDebug("%s%zu: send: %s Message-Id: %u [%u bytes] IDs: %u.%u Seq: %u",
+	printf("%s%zu: send: %s Message-Id: %u [%u bytes] IDs: %u.%u Seq: %u",
 			pfx, conn_id,
 			proto_version_str,
 			msg->msgid, msg->len, msg->sysid, msg->compid, msg->seq);
@@ -141,7 +141,7 @@ void MAVConnInterface::log_send(const char *pfx, const mavlink_message_t *msg)
 
 void MAVConnInterface::log_send_obj(const char *pfx, const mavlink::Message &msg)
 {
-	CONSOLE_BRIDGE_logDebug("%s%zu: send: %s", pfx, conn_id, msg.to_yaml().c_str());
+	printf("%s%zu: send: %s", pfx, conn_id, msg.to_yaml().c_str());
 }
 
 void MAVConnInterface::send_message_ignore_drop(const mavlink::mavlink_message_t *msg)
@@ -150,7 +150,7 @@ void MAVConnInterface::send_message_ignore_drop(const mavlink::mavlink_message_t
 		send_message(msg);
 	}
 	catch (std::length_error &e) {
-		CONSOLE_BRIDGE_logError(PFX "%zu: DROPPED Message-Id %u [%u bytes] IDs: %u.%u Seq: %u: %s",
+		printf(PFX "%zu: DROPPED Message-Id %u [%u bytes] IDs: %u.%u Seq: %u: %s",
 				conn_id,
 				msg->msgid, msg->len, msg->sysid, msg->compid, msg->seq,
 				e.what());
@@ -163,7 +163,7 @@ void MAVConnInterface::send_message_ignore_drop(const mavlink::Message &msg, uin
 		send_message(msg, source_compid);
 	}
 	catch (std::length_error &e) {
-		CONSOLE_BRIDGE_logError(PFX "%zu: DROPPED Message %s: %s",
+		printf(PFX "%zu: DROPPED Message %s: %s",
 				conn_id,
 				msg.get_name().c_str(),
 				e.what());
@@ -236,14 +236,14 @@ static void url_parse_query(std::string query, uint8_t &sysid, uint8_t &compid)
 	auto ids_it = std::search(query.begin(), query.end(),
 			ids_end.begin(), ids_end.end());
 	if (ids_it == query.end()) {
-		CONSOLE_BRIDGE_logWarn(PFX "URL: unknown query arguments");
+		printf(PFX "URL: unknown query arguments");
 		return;
 	}
 
 	std::advance(ids_it, ids_end.length());
 	auto comma_it = std::find(ids_it, query.end(), ',');
 	if (comma_it == query.end()) {
-		CONSOLE_BRIDGE_logError(PFX "URL: no comma in ids= query");
+		printf(PFX "URL: no comma in ids= query");
 		return;
 	}
 
@@ -253,7 +253,7 @@ static void url_parse_query(std::string query, uint8_t &sysid, uint8_t &compid)
 	sysid = std::stoi(sys);
 	compid = std::stoi(comp);
 
-	CONSOLE_BRIDGE_logDebug(PFX "URL: found system/component id = [%u, %u]", sysid, compid);
+	printf(PFX "URL: found system/component id = [%u, %u]", sysid, compid);
 }
 
 static MAVConnInterface::Ptr url_parse_serial(
@@ -281,7 +281,7 @@ static MAVConnInterface::Ptr url_parse_udp(
 
 	auto sep_it = std::find(hosts.begin(), hosts.end(), '@');
 	if (sep_it == hosts.end()) {
-		CONSOLE_BRIDGE_logError(PFX "UDP URL should contain @!");
+		printf(PFX "UDP URL should contain @!");
 		throw DeviceError("url", "UDP separator not found");
 	}
 
@@ -351,7 +351,7 @@ MAVConnInterface::Ptr MAVConnInterface::open_url_no_connect(
 			proto_end.begin(), proto_end.end());
 	if (proto_it == url.end()) {
 		// looks like file path
-		CONSOLE_BRIDGE_logDebug(PFX "URL: %s: looks like file path", url.c_str());
+		printf(PFX "URL: %s: looks like file path", url.c_str());
 		return url_parse_serial(url, "", system_id, component_id, false);
 	}
 
@@ -375,7 +375,7 @@ MAVConnInterface::Ptr MAVConnInterface::open_url_no_connect(
 		++query_it;
 	query.assign(query_it, url.end());
 
-	CONSOLE_BRIDGE_logDebug(PFX "URL: %s: proto: %s, host: %s, path: %s, query: %s",
+	printf("URL: %s: proto: %s, host: %s, path: %s, query: %s\n",
 			url.c_str(), proto.c_str(), host.c_str(),
 			path.c_str(), query.c_str());
 
@@ -413,7 +413,7 @@ MAVConnInterface::Ptr MAVConnInterface::open_url(
 	{
 		if (!cb_handle_message)
 		{
-			CONSOLE_BRIDGE_logWarn(PFX "You did not provide message handling callback to open_url(), it is unsafe to set it later.");
+			std::cout<< "You did not provide message handling callback to open_url(), it is unsafe to set it later." << std::endl;
 		}
 		interface_ptr->connect(cb_handle_message, cb_handle_closed_port);
 	}

@@ -5,3 +5,4 @@ mavlink-gbp-release
 # editors
 .vscode/
 .idea/
+cmake-build-release/

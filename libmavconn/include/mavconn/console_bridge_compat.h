@@ -35,23 +35,23 @@
 //     cog.outl(f'\tconsole_bridge::log(__FILE__, __LINE__, console_bridge::CONSOLE_BRIDGE_LOG_{fu}, fmt, ##__VA_ARGS__)')
 //     cog.outl(f'#endif // {fn}')
 // ]]]
-#ifndef CONSOLE_BRIDGE_logDebug
-#define CONSOLE_BRIDGE_logDebug(fmt, ...) \
+#ifndef printf
+#define printf(fmt, ...) \
 	console_bridge::log(__FILE__, __LINE__, console_bridge::CONSOLE_BRIDGE_LOG_DEBUG, fmt, ##__VA_ARGS__)
-#endif // CONSOLE_BRIDGE_logDebug
+#endif // printf
 
-#ifndef CONSOLE_BRIDGE_logInform
-#define CONSOLE_BRIDGE_logInform(fmt, ...) \
+#ifndef printf
+#define printf(fmt, ...) \
 	console_bridge::log(__FILE__, __LINE__, console_bridge::CONSOLE_BRIDGE_LOG_INFO, fmt, ##__VA_ARGS__)
-#endif // CONSOLE_BRIDGE_logInform
+#endif // printf
 
-#ifndef CONSOLE_BRIDGE_logWarn
-#define CONSOLE_BRIDGE_logWarn(fmt, ...) \
+#ifndef printf
+#define printf(fmt, ...) \
 	console_bridge::log(__FILE__, __LINE__, console_bridge::CONSOLE_BRIDGE_LOG_WARN, fmt, ##__VA_ARGS__)
-#endif // CONSOLE_BRIDGE_logWarn
+#endif // printf
 
-#ifndef CONSOLE_BRIDGE_logError
-#define CONSOLE_BRIDGE_logError(fmt, ...) \
+#ifndef printf
+#define printf(fmt, ...) \
 	console_bridge::log(__FILE__, __LINE__, console_bridge::CONSOLE_BRIDGE_LOG_ERROR, fmt, ##__VA_ARGS__)
-#endif // CONSOLE_BRIDGE_logError
+#endif // printf
 // [[[end]]] (checksum: c8dda3189b05a621b7244bf375275345)

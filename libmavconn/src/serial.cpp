@@ -17,7 +17,7 @@
 
 #include <cassert>
 
-#include <mavconn/console_bridge_compat.h>
+//#include <mavconn/console_bridge_compat.h>
 #include <mavconn/thread_utils.h>
 #include <mavconn/serial.h>
 
@@ -48,7 +48,7 @@ MAVConnSerial::MAVConnSerial(uint8_t system_id, uint8_t component_id,
 {
 	using SPB = boost::asio::serial_port_base;
 
-	CONSOLE_BRIDGE_logInform(PFXd "device: %s @ %d bps", conn_id, device.c_str(), baudrate);
+	printf(PFXd "device: %s @ %d bps", conn_id, device.c_str(), baudrate);
 
 	try {
 		serial_dev.open(device);
@@ -153,7 +153,7 @@ void MAVConnSerial::close()
 void MAVConnSerial::send_bytes(const uint8_t *bytes, size_t length)
 {
 	if (!is_open()) {
-		CONSOLE_BRIDGE_logError(PFXd "send: channel closed!", conn_id);
+		printf(PFXd "send: channel closed!", conn_id);
 		return;
 	}
 
@@ -173,7 +173,7 @@ void MAVConnSerial::send_message(const mavlink_message_t *message)
 	assert(message != nullptr);
 
 	if (!is_open()) {
-		CONSOLE_BRIDGE_logError(PFXd "send: channel closed!", conn_id);
+		printf(PFXd "send: channel closed!", conn_id);
 		return;
 	}
 
@@ -193,7 +193,7 @@ void MAVConnSerial::send_message(const mavlink_message_t *message)
 void MAVConnSerial::send_message(const mavlink::Message &message, const uint8_t source_compid)
 {
 	if (!is_open()) {
-		CONSOLE_BRIDGE_logError(PFXd "send: channel closed!", conn_id);
+		printf(PFXd "send: channel closed!", conn_id);
 		return;
 	}
 
@@ -217,7 +217,7 @@ void MAVConnSerial::do_read(void)
 			buffer(rx_buf),
 			[sthis] (error_code error, size_t bytes_transferred) {
 				if (error) {
-					CONSOLE_BRIDGE_logError(PFXd "receive: %s", sthis->conn_id, error.message().c_str());
+					printf(PFXd "receive: %s", sthis->conn_id, error.message().c_str());
 					sthis->close();
 					return;
 				}
@@ -245,7 +245,7 @@ void MAVConnSerial::do_write(bool check_tx_state)
 				assert(bytes_transferred <= buf_ref.len);
 
 				if (error) {
-					CONSOLE_BRIDGE_logError(PFXd "write: %s", sthis->conn_id, error.message().c_str());
+					printf(PFXd "write: %s", sthis->conn_id, error.message().c_str());
 					sthis->close();
 					return;
 				}
