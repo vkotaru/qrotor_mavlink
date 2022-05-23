@@ -402,7 +402,7 @@ TEST(development, COMPONENT_INFORMATION_BASIC)
     packet_in.model_name = {{ 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168 }};
     packet_in.software_version = to_char_array("YZABCDEFGHIJKLMNOPQRSTU");
     packet_in.hardware_version = to_char_array("WXYZABCDEFGHIJKLMNOPQRS");
-    packet_in.component_cap_flags1 = 93372036854775807ULL;
+    packet_in.capabilities = 93372036854775807ULL;
 
     mavlink::development::msg::COMPONENT_INFORMATION_BASIC packet1{};
     mavlink::development::msg::COMPONENT_INFORMATION_BASIC packet2{};
@@ -422,7 +422,7 @@ TEST(development, COMPONENT_INFORMATION_BASIC)
     EXPECT_EQ(packet1.model_name, packet2.model_name);
     EXPECT_EQ(packet1.software_version, packet2.software_version);
     EXPECT_EQ(packet1.hardware_version, packet2.hardware_version);
-    EXPECT_EQ(packet1.component_cap_flags1, packet2.component_cap_flags1);
+    EXPECT_EQ(packet1.capabilities, packet2.capabilities);
 }
 
 #ifdef TEST_INTEROP
@@ -443,7 +443,7 @@ TEST(development_interop, COMPONENT_INFORMATION_BASIC)
     packet_in.model_name = {{ 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168 }};
     packet_in.software_version = to_char_array("YZABCDEFGHIJKLMNOPQRSTU");
     packet_in.hardware_version = to_char_array("WXYZABCDEFGHIJKLMNOPQRS");
-    packet_in.component_cap_flags1 = 93372036854775807ULL;
+    packet_in.capabilities = 93372036854775807ULL;
 
     mavlink::development::msg::COMPONENT_INFORMATION_BASIC packet2{};
 
@@ -461,7 +461,7 @@ TEST(development_interop, COMPONENT_INFORMATION_BASIC)
     EXPECT_EQ(packet_in.model_name, packet2.model_name);
     EXPECT_EQ(packet_in.software_version, packet2.software_version);
     EXPECT_EQ(packet_in.hardware_version, packet2.hardware_version);
-    EXPECT_EQ(packet_in.component_cap_flags1, packet2.component_cap_flags1);
+    EXPECT_EQ(packet_in.capabilities, packet2.capabilities);
 
 #ifdef PRINT_MSG
     PRINT_MSG(msg);
@@ -596,6 +596,152 @@ TEST(development_interop, GROUP_END)
     EXPECT_EQ(packet_in.group_id, packet2.group_id);
     EXPECT_EQ(packet_in.mission_checksum, packet2.mission_checksum);
     EXPECT_EQ(packet_in.time_usec, packet2.time_usec);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif
+
+TEST(development, AVAILABLE_MODES)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::development::msg::AVAILABLE_MODES packet_in{};
+    packet_in.number_modes = 17;
+    packet_in.mode_index = 84;
+    packet_in.standard_mode = 151;
+    packet_in.base_mode = 218;
+    packet_in.custom_mode = 963497464;
+    packet_in.mode_name = to_char_array("IJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDE");
+
+    mavlink::development::msg::AVAILABLE_MODES packet1{};
+    mavlink::development::msg::AVAILABLE_MODES packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.number_modes, packet2.number_modes);
+    EXPECT_EQ(packet1.mode_index, packet2.mode_index);
+    EXPECT_EQ(packet1.standard_mode, packet2.standard_mode);
+    EXPECT_EQ(packet1.base_mode, packet2.base_mode);
+    EXPECT_EQ(packet1.custom_mode, packet2.custom_mode);
+    EXPECT_EQ(packet1.mode_name, packet2.mode_name);
+}
+
+#ifdef TEST_INTEROP
+TEST(development_interop, AVAILABLE_MODES)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_available_modes_t packet_c {
+         963497464, 17, 84, 151, 218, "IJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDE"
+    };
+
+    mavlink::development::msg::AVAILABLE_MODES packet_in{};
+    packet_in.number_modes = 17;
+    packet_in.mode_index = 84;
+    packet_in.standard_mode = 151;
+    packet_in.base_mode = 218;
+    packet_in.custom_mode = 963497464;
+    packet_in.mode_name = to_char_array("IJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZABCDE");
+
+    mavlink::development::msg::AVAILABLE_MODES packet2{};
+
+    mavlink_msg_available_modes_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.number_modes, packet2.number_modes);
+    EXPECT_EQ(packet_in.mode_index, packet2.mode_index);
+    EXPECT_EQ(packet_in.standard_mode, packet2.standard_mode);
+    EXPECT_EQ(packet_in.base_mode, packet2.base_mode);
+    EXPECT_EQ(packet_in.custom_mode, packet2.custom_mode);
+    EXPECT_EQ(packet_in.mode_name, packet2.mode_name);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif
+
+TEST(development, CURRENT_MODE)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::development::msg::CURRENT_MODE packet_in{};
+    packet_in.standard_mode = 17;
+    packet_in.base_mode = 84;
+    packet_in.custom_mode = 963497464;
+
+    mavlink::development::msg::CURRENT_MODE packet1{};
+    mavlink::development::msg::CURRENT_MODE packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.standard_mode, packet2.standard_mode);
+    EXPECT_EQ(packet1.base_mode, packet2.base_mode);
+    EXPECT_EQ(packet1.custom_mode, packet2.custom_mode);
+}
+
+#ifdef TEST_INTEROP
+TEST(development_interop, CURRENT_MODE)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_current_mode_t packet_c {
+         963497464, 17, 84
+    };
+
+    mavlink::development::msg::CURRENT_MODE packet_in{};
+    packet_in.standard_mode = 17;
+    packet_in.base_mode = 84;
+    packet_in.custom_mode = 963497464;
+
+    mavlink::development::msg::CURRENT_MODE packet2{};
+
+    mavlink_msg_current_mode_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.standard_mode, packet2.standard_mode);
+    EXPECT_EQ(packet_in.base_mode, packet2.base_mode);
+    EXPECT_EQ(packet_in.custom_mode, packet2.custom_mode);
 
 #ifdef PRINT_MSG
     PRINT_MSG(msg);

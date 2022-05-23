@@ -15,7 +15,7 @@ struct COMPONENT_INFORMATION_BASIC : mavlink::Message {
     static constexpr msgid_t MSG_ID = 396;
     static constexpr size_t LENGTH = 124;
     static constexpr size_t MIN_LENGTH = 124;
-    static constexpr uint8_t CRC_EXTRA = 45;
+    static constexpr uint8_t CRC_EXTRA = 122;
     static constexpr auto NAME = "COMPONENT_INFORMATION_BASIC";
 
 
@@ -24,7 +24,7 @@ struct COMPONENT_INFORMATION_BASIC : mavlink::Message {
     std::array<uint8_t, 32> model_name; /*<  Name of the component model */
     std::array<char, 24> software_version; /*<  Sofware version. The version format can be custom, recommended is SEMVER 'major.minor.patch'. */
     std::array<char, 24> hardware_version; /*<  Hardware version. The version format can be custom, recommended is SEMVER 'major.minor.patch'. */
-    uint64_t component_cap_flags1; /*<  Component capability flags 1 (this is called 1, so that number 2 could be added in the future). */
+    uint64_t capabilities; /*<  Component capability flags */
 
 
     inline std::string get_name(void) const override
@@ -47,7 +47,7 @@ struct COMPONENT_INFORMATION_BASIC : mavlink::Message {
         ss << "  model_name: [" << to_string(model_name) << "]" << std::endl;
         ss << "  software_version: \"" << to_string(software_version) << "\"" << std::endl;
         ss << "  hardware_version: \"" << to_string(hardware_version) << "\"" << std::endl;
-        ss << "  component_cap_flags1: " << component_cap_flags1 << std::endl;
+        ss << "  capabilities: " << capabilities << std::endl;
 
         return ss.str();
     }
@@ -56,7 +56,7 @@ struct COMPONENT_INFORMATION_BASIC : mavlink::Message {
     {
         map.reset(MSG_ID, LENGTH);
 
-        map << component_cap_flags1;          // offset: 0
+        map << capabilities;                  // offset: 0
         map << time_boot_ms;                  // offset: 8
         map << vendor_name;                   // offset: 12
         map << model_name;                    // offset: 44
@@ -66,7 +66,7 @@ struct COMPONENT_INFORMATION_BASIC : mavlink::Message {
 
     inline void deserialize(mavlink::MsgMap &map) override
     {
-        map >> component_cap_flags1;          // offset: 0
+        map >> capabilities;                  // offset: 0
         map >> time_boot_ms;                  // offset: 8
         map >> vendor_name;                   // offset: 12
         map >> model_name;                    // offset: 44

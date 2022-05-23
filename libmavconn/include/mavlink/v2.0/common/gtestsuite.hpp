@@ -17184,6 +17184,85 @@ TEST(common_interop, TUNNEL)
 }
 #endif
 
+TEST(common, CAN_FRAME)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::common::msg::CAN_FRAME packet_in{};
+    packet_in.target_system = 17;
+    packet_in.target_component = 84;
+    packet_in.bus = 151;
+    packet_in.len = 218;
+    packet_in.id = 963497464;
+    packet_in.data = {{ 29, 30, 31, 32, 33, 34, 35, 36 }};
+
+    mavlink::common::msg::CAN_FRAME packet1{};
+    mavlink::common::msg::CAN_FRAME packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.target_system, packet2.target_system);
+    EXPECT_EQ(packet1.target_component, packet2.target_component);
+    EXPECT_EQ(packet1.bus, packet2.bus);
+    EXPECT_EQ(packet1.len, packet2.len);
+    EXPECT_EQ(packet1.id, packet2.id);
+    EXPECT_EQ(packet1.data, packet2.data);
+}
+
+#ifdef TEST_INTEROP
+TEST(common_interop, CAN_FRAME)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_can_frame_t packet_c {
+         963497464, 17, 84, 151, 218, { 29, 30, 31, 32, 33, 34, 35, 36 }
+    };
+
+    mavlink::common::msg::CAN_FRAME packet_in{};
+    packet_in.target_system = 17;
+    packet_in.target_component = 84;
+    packet_in.bus = 151;
+    packet_in.len = 218;
+    packet_in.id = 963497464;
+    packet_in.data = {{ 29, 30, 31, 32, 33, 34, 35, 36 }};
+
+    mavlink::common::msg::CAN_FRAME packet2{};
+
+    mavlink_msg_can_frame_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.target_system, packet2.target_system);
+    EXPECT_EQ(packet_in.target_component, packet2.target_component);
+    EXPECT_EQ(packet_in.bus, packet2.bus);
+    EXPECT_EQ(packet_in.len, packet2.len);
+    EXPECT_EQ(packet_in.id, packet2.id);
+    EXPECT_EQ(packet_in.data, packet2.data);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif
+
 TEST(common, ONBOARD_COMPUTER_STATUS)
 {
     mavlink::mavlink_message_t msg;
@@ -17817,6 +17896,164 @@ TEST(common_interop, RESPONSE_EVENT_ERROR)
     EXPECT_EQ(packet_in.sequence, packet2.sequence);
     EXPECT_EQ(packet_in.sequence_oldest_available, packet2.sequence_oldest_available);
     EXPECT_EQ(packet_in.reason, packet2.reason);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif
+
+TEST(common, CANFD_FRAME)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::common::msg::CANFD_FRAME packet_in{};
+    packet_in.target_system = 17;
+    packet_in.target_component = 84;
+    packet_in.bus = 151;
+    packet_in.len = 218;
+    packet_in.id = 963497464;
+    packet_in.data = {{ 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92 }};
+
+    mavlink::common::msg::CANFD_FRAME packet1{};
+    mavlink::common::msg::CANFD_FRAME packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.target_system, packet2.target_system);
+    EXPECT_EQ(packet1.target_component, packet2.target_component);
+    EXPECT_EQ(packet1.bus, packet2.bus);
+    EXPECT_EQ(packet1.len, packet2.len);
+    EXPECT_EQ(packet1.id, packet2.id);
+    EXPECT_EQ(packet1.data, packet2.data);
+}
+
+#ifdef TEST_INTEROP
+TEST(common_interop, CANFD_FRAME)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_canfd_frame_t packet_c {
+         963497464, 17, 84, 151, 218, { 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92 }
+    };
+
+    mavlink::common::msg::CANFD_FRAME packet_in{};
+    packet_in.target_system = 17;
+    packet_in.target_component = 84;
+    packet_in.bus = 151;
+    packet_in.len = 218;
+    packet_in.id = 963497464;
+    packet_in.data = {{ 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92 }};
+
+    mavlink::common::msg::CANFD_FRAME packet2{};
+
+    mavlink_msg_canfd_frame_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.target_system, packet2.target_system);
+    EXPECT_EQ(packet_in.target_component, packet2.target_component);
+    EXPECT_EQ(packet_in.bus, packet2.bus);
+    EXPECT_EQ(packet_in.len, packet2.len);
+    EXPECT_EQ(packet_in.id, packet2.id);
+    EXPECT_EQ(packet_in.data, packet2.data);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif
+
+TEST(common, CAN_FILTER_MODIFY)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::common::msg::CAN_FILTER_MODIFY packet_in{};
+    packet_in.target_system = 101;
+    packet_in.target_component = 168;
+    packet_in.bus = 235;
+    packet_in.operation = 46;
+    packet_in.num_ids = 113;
+    packet_in.ids = {{ 17235, 17236, 17237, 17238, 17239, 17240, 17241, 17242, 17243, 17244, 17245, 17246, 17247, 17248, 17249, 17250 }};
+
+    mavlink::common::msg::CAN_FILTER_MODIFY packet1{};
+    mavlink::common::msg::CAN_FILTER_MODIFY packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.target_system, packet2.target_system);
+    EXPECT_EQ(packet1.target_component, packet2.target_component);
+    EXPECT_EQ(packet1.bus, packet2.bus);
+    EXPECT_EQ(packet1.operation, packet2.operation);
+    EXPECT_EQ(packet1.num_ids, packet2.num_ids);
+    EXPECT_EQ(packet1.ids, packet2.ids);
+}
+
+#ifdef TEST_INTEROP
+TEST(common_interop, CAN_FILTER_MODIFY)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_can_filter_modify_t packet_c {
+         { 17235, 17236, 17237, 17238, 17239, 17240, 17241, 17242, 17243, 17244, 17245, 17246, 17247, 17248, 17249, 17250 }, 101, 168, 235, 46, 113
+    };
+
+    mavlink::common::msg::CAN_FILTER_MODIFY packet_in{};
+    packet_in.target_system = 101;
+    packet_in.target_component = 168;
+    packet_in.bus = 235;
+    packet_in.operation = 46;
+    packet_in.num_ids = 113;
+    packet_in.ids = {{ 17235, 17236, 17237, 17238, 17239, 17240, 17241, 17242, 17243, 17244, 17245, 17246, 17247, 17248, 17249, 17250 }};
+
+    mavlink::common::msg::CAN_FILTER_MODIFY packet2{};
+
+    mavlink_msg_can_filter_modify_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.target_system, packet2.target_system);
+    EXPECT_EQ(packet_in.target_component, packet2.target_component);
+    EXPECT_EQ(packet_in.bus, packet2.bus);
+    EXPECT_EQ(packet_in.operation, packet2.operation);
+    EXPECT_EQ(packet_in.num_ids, packet2.num_ids);
+    EXPECT_EQ(packet_in.ids, packet2.ids);
 
 #ifdef PRINT_MSG
     PRINT_MSG(msg);

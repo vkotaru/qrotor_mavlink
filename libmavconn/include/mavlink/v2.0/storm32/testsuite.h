@@ -1,6 +1,6 @@
 /** @file
  *    @brief MAVLink comm protocol testsuite generated from storm32.xml
- *    @see http://qgroundcontrol.org/mavlink/
+ *    @see https://mavlink.io/en/
  */
 #pragma once
 #ifndef STORM32_TESTSUITE_H
@@ -86,6 +86,11 @@ static void mavlink_test_storm32_gimbal_device_status(uint8_t system_id, uint8_t
     mavlink_msg_storm32_gimbal_device_status_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.time_boot_ms , packet1.flags , packet1.q , packet1.angular_velocity_x , packet1.angular_velocity_y , packet1.angular_velocity_z , packet1.yaw_absolute , packet1.failure_flags );
     mavlink_msg_storm32_gimbal_device_status_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("STORM32_GIMBAL_DEVICE_STATUS") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_STORM32_GIMBAL_DEVICE_STATUS) != NULL);
+#endif
 }
 
 static void mavlink_test_storm32_gimbal_device_control(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -146,6 +151,11 @@ static void mavlink_test_storm32_gimbal_device_control(uint8_t system_id, uint8_
     mavlink_msg_storm32_gimbal_device_control_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.flags , packet1.q , packet1.angular_velocity_x , packet1.angular_velocity_y , packet1.angular_velocity_z );
     mavlink_msg_storm32_gimbal_device_control_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("STORM32_GIMBAL_DEVICE_CONTROL") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_STORM32_GIMBAL_DEVICE_CONTROL) != NULL);
+#endif
 }
 
 static void mavlink_test_storm32_gimbal_manager_information(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -208,6 +218,11 @@ static void mavlink_test_storm32_gimbal_manager_information(uint8_t system_id, u
     mavlink_msg_storm32_gimbal_manager_information_send(MAVLINK_COMM_1 , packet1.gimbal_id , packet1.device_cap_flags , packet1.manager_cap_flags , packet1.roll_min , packet1.roll_max , packet1.pitch_min , packet1.pitch_max , packet1.yaw_min , packet1.yaw_max );
     mavlink_msg_storm32_gimbal_manager_information_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("STORM32_GIMBAL_MANAGER_INFORMATION") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_STORM32_GIMBAL_MANAGER_INFORMATION) != NULL);
+#endif
 }
 
 static void mavlink_test_storm32_gimbal_manager_status(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -266,6 +281,11 @@ static void mavlink_test_storm32_gimbal_manager_status(uint8_t system_id, uint8_
     mavlink_msg_storm32_gimbal_manager_status_send(MAVLINK_COMM_1 , packet1.gimbal_id , packet1.supervisor , packet1.device_flags , packet1.manager_flags , packet1.profile );
     mavlink_msg_storm32_gimbal_manager_status_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("STORM32_GIMBAL_MANAGER_STATUS") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_STORM32_GIMBAL_MANAGER_STATUS) != NULL);
+#endif
 }
 
 static void mavlink_test_storm32_gimbal_manager_control(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -329,6 +349,11 @@ static void mavlink_test_storm32_gimbal_manager_control(uint8_t system_id, uint8
     mavlink_msg_storm32_gimbal_manager_control_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.gimbal_id , packet1.client , packet1.device_flags , packet1.manager_flags , packet1.q , packet1.angular_velocity_x , packet1.angular_velocity_y , packet1.angular_velocity_z );
     mavlink_msg_storm32_gimbal_manager_control_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("STORM32_GIMBAL_MANAGER_CONTROL") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_STORM32_GIMBAL_MANAGER_CONTROL) != NULL);
+#endif
 }
 
 static void mavlink_test_storm32_gimbal_manager_control_pitchyaw(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -392,6 +417,11 @@ static void mavlink_test_storm32_gimbal_manager_control_pitchyaw(uint8_t system_
     mavlink_msg_storm32_gimbal_manager_control_pitchyaw_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.gimbal_id , packet1.client , packet1.device_flags , packet1.manager_flags , packet1.pitch , packet1.yaw , packet1.pitch_rate , packet1.yaw_rate );
     mavlink_msg_storm32_gimbal_manager_control_pitchyaw_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("STORM32_GIMBAL_MANAGER_CONTROL_PITCHYAW") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_STORM32_GIMBAL_MANAGER_CONTROL_PITCHYAW) != NULL);
+#endif
 }
 
 static void mavlink_test_storm32_gimbal_manager_correct_roll(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -450,6 +480,11 @@ static void mavlink_test_storm32_gimbal_manager_correct_roll(uint8_t system_id, 
     mavlink_msg_storm32_gimbal_manager_correct_roll_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.gimbal_id , packet1.client , packet1.roll );
     mavlink_msg_storm32_gimbal_manager_correct_roll_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("STORM32_GIMBAL_MANAGER_CORRECT_ROLL") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_STORM32_GIMBAL_MANAGER_CORRECT_ROLL) != NULL);
+#endif
 }
 
 static void mavlink_test_storm32_gimbal_manager_profile(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -511,6 +546,11 @@ static void mavlink_test_storm32_gimbal_manager_profile(uint8_t system_id, uint8
     mavlink_msg_storm32_gimbal_manager_profile_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.gimbal_id , packet1.profile , packet1.priorities , packet1.profile_flags , packet1.rc_timeout , packet1.timeouts );
     mavlink_msg_storm32_gimbal_manager_profile_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("STORM32_GIMBAL_MANAGER_PROFILE") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_STORM32_GIMBAL_MANAGER_PROFILE) != NULL);
+#endif
 }
 
 static void mavlink_test_qshot_status(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -566,6 +606,11 @@ static void mavlink_test_qshot_status(uint8_t system_id, uint8_t component_id, m
     mavlink_msg_qshot_status_send(MAVLINK_COMM_1 , packet1.mode , packet1.shot_state );
     mavlink_msg_qshot_status_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("QSHOT_STATUS") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_QSHOT_STATUS) != NULL);
+#endif
 }
 
 static void mavlink_test_component_prearm_status(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -623,6 +668,11 @@ static void mavlink_test_component_prearm_status(uint8_t system_id, uint8_t comp
     mavlink_msg_component_prearm_status_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.enabled_flags , packet1.fail_flags );
     mavlink_msg_component_prearm_status_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("COMPONENT_PREARM_STATUS") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_COMPONENT_PREARM_STATUS) != NULL);
+#endif
 }
 
 static void mavlink_test_storm32(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)

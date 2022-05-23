@@ -703,6 +703,7 @@ TEST(ardupilotmega, MOUNT_STATUS)
     packet_in.pointing_a = 963497464;
     packet_in.pointing_b = 963497672;
     packet_in.pointing_c = 963497880;
+    packet_in.mount_mode = 175;
 
     mavlink::ardupilotmega::msg::MOUNT_STATUS packet1{};
     mavlink::ardupilotmega::msg::MOUNT_STATUS packet2{};
@@ -722,6 +723,7 @@ TEST(ardupilotmega, MOUNT_STATUS)
     EXPECT_EQ(packet1.pointing_a, packet2.pointing_a);
     EXPECT_EQ(packet1.pointing_b, packet2.pointing_b);
     EXPECT_EQ(packet1.pointing_c, packet2.pointing_c);
+    EXPECT_EQ(packet1.mount_mode, packet2.mount_mode);
 }
 
 #ifdef TEST_INTEROP
@@ -733,7 +735,7 @@ TEST(ardupilotmega_interop, MOUNT_STATUS)
     memset(&msg, 0, sizeof(msg));
 
     mavlink_mount_status_t packet_c {
-         963497464, 963497672, 963497880, 41, 108
+         963497464, 963497672, 963497880, 41, 108, 175
     };
 
     mavlink::ardupilotmega::msg::MOUNT_STATUS packet_in{};
@@ -742,6 +744,7 @@ TEST(ardupilotmega_interop, MOUNT_STATUS)
     packet_in.pointing_a = 963497464;
     packet_in.pointing_b = 963497672;
     packet_in.pointing_c = 963497880;
+    packet_in.mount_mode = 175;
 
     mavlink::ardupilotmega::msg::MOUNT_STATUS packet2{};
 
@@ -759,6 +762,7 @@ TEST(ardupilotmega_interop, MOUNT_STATUS)
     EXPECT_EQ(packet_in.pointing_a, packet2.pointing_a);
     EXPECT_EQ(packet_in.pointing_b, packet2.pointing_b);
     EXPECT_EQ(packet_in.pointing_c, packet2.pointing_c);
+    EXPECT_EQ(packet_in.mount_mode, packet2.mount_mode);
 
 #ifdef PRINT_MSG
     PRINT_MSG(msg);

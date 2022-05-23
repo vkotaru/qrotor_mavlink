@@ -10,6 +10,8 @@ namespace msg {
  * @brief FLIGHT_INFORMATION message
  *
  * Information about flight since last arming.
+        This can be requested using MAV_CMD_REQUEST_MESSAGE.
+      
  */
 struct FLIGHT_INFORMATION : mavlink::Message {
     static constexpr msgid_t MSG_ID = 264;

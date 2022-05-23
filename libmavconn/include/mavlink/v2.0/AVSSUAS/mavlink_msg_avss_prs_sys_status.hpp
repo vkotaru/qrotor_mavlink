@@ -13,17 +13,17 @@ namespace msg {
  */
 struct AVSS_PRS_SYS_STATUS : mavlink::Message {
     static constexpr msgid_t MSG_ID = 60050;
-    static constexpr size_t LENGTH = 12;
-    static constexpr size_t MIN_LENGTH = 12;
-    static constexpr uint8_t CRC_EXTRA = 153;
+    static constexpr size_t LENGTH = 14;
+    static constexpr size_t MIN_LENGTH = 14;
+    static constexpr uint8_t CRC_EXTRA = 220;
     static constexpr auto NAME = "AVSS_PRS_SYS_STATUS";
 
 
-    uint8_t arm_status; /*<  PRS arm statuses */
-    uint16_t battery_status; /*<  Estimated battery run-time without a remote connection and PRS battery voltage */
+    uint32_t time_boot_ms; /*< [ms] Timestamp (time since PRS boot). */
     uint32_t error_status; /*<  PRS error statuses */
-    uint8_t change_status; /*<  PRS battery change statuses */
-    uint32_t time_boot_ms; /*<  Time since PRS system boot */
+    uint32_t battery_status; /*<  Estimated battery run-time without a remote connection and PRS battery voltage */
+    uint8_t arm_status; /*<  PRS arm statuses */
+    uint8_t charge_status; /*<  PRS battery charge statuses */
 
 
     inline std::string get_name(void) const override
@@ -41,11 +41,11 @@ struct AVSS_PRS_SYS_STATUS : mavlink::Message {
         std::stringstream ss;
 
         ss << NAME << ":" << std::endl;
-        ss << "  arm_status: " << +arm_status << std::endl;
-        ss << "  battery_status: " << battery_status << std::endl;
-        ss << "  error_status: " << error_status << std::endl;
-        ss << "  change_status: " << +change_status << std::endl;
         ss << "  time_boot_ms: " << time_boot_ms << std::endl;
+        ss << "  error_status: " << error_status << std::endl;
+        ss << "  battery_status: " << battery_status << std::endl;
+        ss << "  arm_status: " << +arm_status << std::endl;
+        ss << "  charge_status: " << +charge_status << std::endl;
 
         return ss.str();
     }
@@ -54,20 +54,20 @@ struct AVSS_PRS_SYS_STATUS : mavlink::Message {
     {
         map.reset(MSG_ID, LENGTH);
 
-        map << error_status;                  // offset: 0
-        map << time_boot_ms;                  // offset: 4
+        map << time_boot_ms;                  // offset: 0
+        map << error_status;                  // offset: 4
         map << battery_status;                // offset: 8
-        map << arm_status;                    // offset: 10
-        map << change_status;                 // offset: 11
+        map << arm_status;                    // offset: 12
+        map << charge_status;                 // offset: 13
     }
 
     inline void deserialize(mavlink::MsgMap &map) override
     {
-        map >> error_status;                  // offset: 0
-        map >> time_boot_ms;                  // offset: 4
+        map >> time_boot_ms;                  // offset: 0
+        map >> error_status;                  // offset: 4
         map >> battery_status;                // offset: 8
-        map >> arm_status;                    // offset: 10
-        map >> change_status;                 // offset: 11
+        map >> arm_status;                    // offset: 12
+        map >> charge_status;                 // offset: 13
     }
 };
 

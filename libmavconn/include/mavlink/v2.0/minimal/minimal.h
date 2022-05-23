@@ -10,8 +10,8 @@
     #error Wrong include order: MAVLINK_MINIMAL.H MUST NOT BE DIRECTLY USED. Include mavlink.h from the same directory instead or set ALL AND EVERY defines from MAVLINK.H manually accordingly, including the #define MAVLINK_H call.
 #endif
 
-#undef MAVLINK_THIS_XML_IDX
-#define MAVLINK_THIS_XML_IDX 1
+#undef MAVLINK_THIS_XML_HASH
+#define MAVLINK_THIS_XML_HASH 7785088099756914294
 
 #ifdef __cplusplus
 extern "C" {
@@ -111,7 +111,8 @@ typedef enum MAV_TYPE
    MAV_TYPE_OSD=39, /* OSD | */
    MAV_TYPE_IMU=40, /* IMU | */
    MAV_TYPE_GPS=41, /* GPS | */
-   MAV_TYPE_ENUM_END=42, /*  | */
+   MAV_TYPE_WINCH=42, /* Winch | */
+   MAV_TYPE_ENUM_END=43, /*  | */
 } MAV_TYPE;
 #endif
 
@@ -286,6 +287,7 @@ typedef enum MAV_COMPONENT
    MAV_COMP_ID_GIMBAL6=175, /* Gimbal #6. | */
    MAV_COMP_ID_BATTERY=180, /* Battery #1. | */
    MAV_COMP_ID_BATTERY2=181, /* Battery #2. | */
+   MAV_COMP_ID_MAVCAN=189, /* CAN over MAVLink client. | */
    MAV_COMP_ID_MISSIONPLANNER=190, /* Component that can generate/supply a mission flight plan (e.g. GCS or developer API). | */
    MAV_COMP_ID_ONBOARD_COMPUTER=191, /* Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on. | */
    MAV_COMP_ID_ONBOARD_COMPUTER2=192, /* Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on. | */
@@ -329,10 +331,10 @@ typedef enum MAV_COMPONENT
 // base include
 
 
-#undef MAVLINK_THIS_XML_IDX
-#define MAVLINK_THIS_XML_IDX 1
+#undef MAVLINK_THIS_XML_HASH
+#define MAVLINK_THIS_XML_HASH 7785088099756914294
 
-#if MAVLINK_THIS_XML_IDX == MAVLINK_PRIMARY_XML_IDX
+#if MAVLINK_THIS_XML_HASH == MAVLINK_PRIMARY_XML_HASH
 # define MAVLINK_MESSAGE_INFO {MAVLINK_MESSAGE_INFO_HEARTBEAT, MAVLINK_MESSAGE_INFO_PROTOCOL_VERSION}
 # define MAVLINK_MESSAGE_NAMES {{ "HEARTBEAT", 0 }, { "PROTOCOL_VERSION", 300 }}
 # if MAVLINK_COMMAND_24BIT

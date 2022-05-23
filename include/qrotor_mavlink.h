@@ -36,7 +36,7 @@ private:
 
   mavconn::MAVConnInterface::Ptr server, client;
 
-  void recv_message(const mavlink_message_t *message, const Framing framing);
+  void recv_message(const mavlink_message_t *message, Framing framing);
   bool wait_one();
   std::queue<mavlink_message_t> msg_buffer_queue_;
 

@@ -19,7 +19,7 @@ namespace mavlink {
 namespace test {
 
 /**
- * Array of msg_entry needed for @p mavlink_parse_char() (trought @p mavlink_get_msg_entry())
+ * Array of msg_entry needed for @p mavlink_parse_char() (through @p mavlink_get_msg_entry())
  */
 constexpr std::array<mavlink_msg_entry_t, 1> MESSAGE_ENTRIES {{ {17000, 103, 179, 179, 0, 0, 0} }};
 

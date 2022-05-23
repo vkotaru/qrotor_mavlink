@@ -417,3 +417,66 @@ TEST(qrotor_interop, INPUT_PWM)
 #endif
 }
 #endif
+
+TEST(qrotor, SYSTEM_STATUS)
+{
+    mavlink::mavlink_message_t msg;
+    mavlink::MsgMap map1(msg);
+    mavlink::MsgMap map2(msg);
+
+    mavlink::qrotor::msg::SYSTEM_STATUS packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.w = 73.0;
+
+    mavlink::qrotor::msg::SYSTEM_STATUS packet1{};
+    mavlink::qrotor::msg::SYSTEM_STATUS packet2{};
+
+    packet1 = packet_in;
+
+    //std::cout << packet1.to_yaml() << std::endl;
+
+    packet1.serialize(map1);
+
+    mavlink::mavlink_finalize_message(&msg, 1, 1, packet1.MIN_LENGTH, packet1.LENGTH, packet1.CRC_EXTRA);
+
+    packet2.deserialize(map2);
+
+    EXPECT_EQ(packet1.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet1.w, packet2.w);
+}
+
+#ifdef TEST_INTEROP
+TEST(qrotor_interop, SYSTEM_STATUS)
+{
+    mavlink_message_t msg;
+
+    // to get nice print
+    memset(&msg, 0, sizeof(msg));
+
+    mavlink_system_status_t packet_c {
+         93372036854775807ULL, 73.0
+    };
+
+    mavlink::qrotor::msg::SYSTEM_STATUS packet_in{};
+    packet_in.time_usec = 93372036854775807ULL;
+    packet_in.w = 73.0;
+
+    mavlink::qrotor::msg::SYSTEM_STATUS packet2{};
+
+    mavlink_msg_system_status_encode(1, 1, &msg, &packet_c);
+
+    // simulate message-handling callback
+    [&packet2](const mavlink_message_t *cmsg) {
+        MsgMap map2(cmsg);
+
+        packet2.deserialize(map2);
+    } (&msg);
+
+    EXPECT_EQ(packet_in.time_usec, packet2.time_usec);
+    EXPECT_EQ(packet_in.w, packet2.w);
+
+#ifdef PRINT_MSG
+    PRINT_MSG(msg);
+#endif
+}
+#endif

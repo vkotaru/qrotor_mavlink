@@ -1,6 +1,6 @@
 /** @file
  *    @brief MAVLink comm protocol testsuite generated from paparazzi.xml
- *    @see http://qgroundcontrol.org/mavlink/
+ *    @see https://mavlink.io/en/
  */
 #pragma once
 #ifndef PAPARAZZI_TESTSUITE_H
@@ -80,6 +80,11 @@ static void mavlink_test_script_item(uint8_t system_id, uint8_t component_id, ma
     mavlink_msg_script_item_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.seq , packet1.name );
     mavlink_msg_script_item_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("SCRIPT_ITEM") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_SCRIPT_ITEM) != NULL);
+#endif
 }
 
 static void mavlink_test_script_request(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -136,6 +141,11 @@ static void mavlink_test_script_request(uint8_t system_id, uint8_t component_id,
     mavlink_msg_script_request_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.seq );
     mavlink_msg_script_request_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("SCRIPT_REQUEST") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_SCRIPT_REQUEST) != NULL);
+#endif
 }
 
 static void mavlink_test_script_request_list(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -191,6 +201,11 @@ static void mavlink_test_script_request_list(uint8_t system_id, uint8_t componen
     mavlink_msg_script_request_list_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component );
     mavlink_msg_script_request_list_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("SCRIPT_REQUEST_LIST") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_SCRIPT_REQUEST_LIST) != NULL);
+#endif
 }
 
 static void mavlink_test_script_count(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -247,6 +262,11 @@ static void mavlink_test_script_count(uint8_t system_id, uint8_t component_id, m
     mavlink_msg_script_count_send(MAVLINK_COMM_1 , packet1.target_system , packet1.target_component , packet1.count );
     mavlink_msg_script_count_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("SCRIPT_COUNT") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_SCRIPT_COUNT) != NULL);
+#endif
 }
 
 static void mavlink_test_script_current(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
@@ -301,6 +321,11 @@ static void mavlink_test_script_current(uint8_t system_id, uint8_t component_id,
     mavlink_msg_script_current_send(MAVLINK_COMM_1 , packet1.seq );
     mavlink_msg_script_current_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+#ifdef MAVLINK_HAVE_GET_MESSAGE_INFO
+    MAVLINK_ASSERT(mavlink_get_message_info_by_name("SCRIPT_CURRENT") != NULL);
+    MAVLINK_ASSERT(mavlink_get_message_info_by_id(MAVLINK_MSG_ID_SCRIPT_CURRENT) != NULL);
+#endif
 }
 
 static void mavlink_test_paparazzi(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)

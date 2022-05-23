@@ -19,7 +19,7 @@ namespace mavlink {
 namespace minimal {
 
 /**
- * Array of msg_entry needed for @p mavlink_parse_char() (trought @p mavlink_get_msg_entry())
+ * Array of msg_entry needed for @p mavlink_parse_char() (through @p mavlink_get_msg_entry())
  */
 constexpr std::array<mavlink_msg_entry_t, 2> MESSAGE_ENTRIES {{ {0, 50, 9, 9, 0, 0, 0}, {300, 217, 22, 22, 0, 0, 0} }};
 
@@ -104,10 +104,11 @@ enum class MAV_TYPE : uint8_t
     OSD=39, /* OSD | */
     IMU=40, /* IMU | */
     GPS=41, /* GPS | */
+    WINCH=42, /* Winch | */
 };
 
 //! MAV_TYPE ENUM_END
-constexpr auto MAV_TYPE_ENUM_END = 42;
+constexpr auto MAV_TYPE_ENUM_END = 43;
 
 /** @brief These flags encode the MAV mode. */
 enum class MAV_MODE_FLAG : uint8_t
@@ -275,6 +276,7 @@ enum class MAV_COMPONENT
     COMP_ID_GIMBAL6=175, /* Gimbal #6. | */
     COMP_ID_BATTERY=180, /* Battery #1. | */
     COMP_ID_BATTERY2=181, /* Battery #2. | */
+    COMP_ID_MAVCAN=189, /* CAN over MAVLink client. | */
     COMP_ID_MISSIONPLANNER=190, /* Component that can generate/supply a mission flight plan (e.g. GCS or developer API). | */
     COMP_ID_ONBOARD_COMPUTER=191, /* Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on. | */
     COMP_ID_ONBOARD_COMPUTER2=192, /* Component that lives on the onboard computer (companion computer) and has some generic functionalities, such as settings system parameters and monitoring the status of some processes that don't directly speak mavlink and so on. | */
