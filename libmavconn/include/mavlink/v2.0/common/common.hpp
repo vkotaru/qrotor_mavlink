@@ -34,7 +34,7 @@ constexpr auto MAVLINK_VERSION = 3;
 enum class FIRMWARE_VERSION_TYPE
 {
     DEV=0, /* development release | */
-    ALPHA=64, /* alpha release | */
+    ALPHA1=64, /* alpha release | */
     BETA=128, /* beta release | */
     RC=192, /* release candidate | */
     OFFICIAL=255, /* official stable release | */
