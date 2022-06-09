@@ -21,7 +21,7 @@ namespace qrotor {
 /**
  * Array of msg_entry needed for @p mavlink_parse_char() (through @p mavlink_get_msg_entry())
  */
-constexpr std::array<mavlink_msg_entry_t, 8> MESSAGE_ENTRIES {{ {0, 50, 9, 9, 0, 0, 0}, {180, 99, 25, 25, 0, 0, 0}, {181, 60, 32, 32, 0, 0, 0}, {182, 153, 44, 44, 0, 0, 0}, {183, 208, 24, 24, 0, 0, 0}, {184, 149, 24, 24, 0, 0, 0}, {185, 17, 12, 12, 0, 0, 0}, {300, 217, 22, 22, 0, 0, 0} }};
+constexpr std::array<mavlink_msg_entry_t, 8> MESSAGE_ENTRIES {{ {0, 50, 9, 9, 0, 0, 0}, {180, 83, 26, 26, 0, 0, 0}, {181, 60, 32, 32, 0, 0, 0}, {182, 153, 44, 44, 0, 0, 0}, {183, 208, 24, 24, 0, 0, 0}, {184, 149, 24, 24, 0, 0, 0}, {185, 17, 12, 12, 0, 0, 0}, {300, 217, 22, 22, 0, 0, 0} }};
 
 //! MAVLINK VERSION
 constexpr auto MAVLINK_VERSION = 3;

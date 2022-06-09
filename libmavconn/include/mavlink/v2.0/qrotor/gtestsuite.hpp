@@ -29,6 +29,7 @@ TEST(qrotor, OFFBOARD_CONTROL)
     packet_in.z = 101.0;
     packet_in.thrust = 129.0;
     packet_in.yaw = 157.0;
+    packet_in.act = 144;
 
     mavlink::qrotor::msg::OFFBOARD_CONTROL packet1{};
     mavlink::qrotor::msg::OFFBOARD_CONTROL packet2{};
@@ -50,6 +51,7 @@ TEST(qrotor, OFFBOARD_CONTROL)
     EXPECT_EQ(packet1.z, packet2.z);
     EXPECT_EQ(packet1.thrust, packet2.thrust);
     EXPECT_EQ(packet1.yaw, packet2.yaw);
+    EXPECT_EQ(packet1.act, packet2.act);
 }
 
 #ifdef TEST_INTEROP
@@ -61,7 +63,7 @@ TEST(qrotor_interop, OFFBOARD_CONTROL)
     memset(&msg, 0, sizeof(msg));
 
     mavlink_offboard_control_t packet_c {
-         17.0, 45.0, 73.0, 101.0, 129.0, 157.0, 77
+         17.0, 45.0, 73.0, 101.0, 129.0, 157.0, 77, 144
     };
 
     mavlink::qrotor::msg::OFFBOARD_CONTROL packet_in{};
@@ -72,6 +74,7 @@ TEST(qrotor_interop, OFFBOARD_CONTROL)
     packet_in.z = 101.0;
     packet_in.thrust = 129.0;
     packet_in.yaw = 157.0;
+    packet_in.act = 144;
 
     mavlink::qrotor::msg::OFFBOARD_CONTROL packet2{};
 
@@ -91,6 +94,7 @@ TEST(qrotor_interop, OFFBOARD_CONTROL)
     EXPECT_EQ(packet_in.z, packet2.z);
     EXPECT_EQ(packet_in.thrust, packet2.thrust);
     EXPECT_EQ(packet_in.yaw, packet2.yaw);
+    EXPECT_EQ(packet_in.act, packet2.act);
 
 #ifdef PRINT_MSG
     PRINT_MSG(msg);

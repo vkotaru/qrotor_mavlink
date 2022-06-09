@@ -39,6 +39,7 @@
       <field type="float" name="z">Z-channel, (typically, thrust in Z-direction [N])</field>
       <field type="float" name="thrust">Thrust, (typically, thrust-scale [N])</field>
       <field type="float" name="yaw">Yaw setpoint [rad]</field>
+      <field type="uint8_t" name="act">Acutator bit map</field>
     </message>
     <message id="181" name="POWER_READINGS">
       <description>Power module readings</description>

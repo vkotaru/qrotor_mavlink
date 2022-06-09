@@ -13,9 +13,9 @@ namespace msg {
  */
 struct OFFBOARD_CONTROL : mavlink::Message {
     static constexpr msgid_t MSG_ID = 180;
-    static constexpr size_t LENGTH = 25;
-    static constexpr size_t MIN_LENGTH = 25;
-    static constexpr uint8_t CRC_EXTRA = 99;
+    static constexpr size_t LENGTH = 26;
+    static constexpr size_t MIN_LENGTH = 26;
+    static constexpr uint8_t CRC_EXTRA = 83;
     static constexpr auto NAME = "OFFBOARD_CONTROL";
 
 
@@ -26,6 +26,7 @@ struct OFFBOARD_CONTROL : mavlink::Message {
     float z; /*<  Z-channel, (typically, thrust in Z-direction [N]) */
     float thrust; /*<  Thrust, (typically, thrust-scale [N]) */
     float yaw; /*<  Yaw setpoint [rad] */
+    uint8_t act; /*<  Acutator bit map */
 
 
     inline std::string get_name(void) const override
@@ -50,6 +51,7 @@ struct OFFBOARD_CONTROL : mavlink::Message {
         ss << "  z: " << z << std::endl;
         ss << "  thrust: " << thrust << std::endl;
         ss << "  yaw: " << yaw << std::endl;
+        ss << "  act: " << +act << std::endl;
 
         return ss.str();
     }
@@ -65,6 +67,7 @@ struct OFFBOARD_CONTROL : mavlink::Message {
         map << thrust;                        // offset: 16
         map << yaw;                           // offset: 20
         map << mode;                          // offset: 24
+        map << act;                           // offset: 25
     }
 
     inline void deserialize(mavlink::MsgMap &map) override
@@ -76,6 +79,7 @@ struct OFFBOARD_CONTROL : mavlink::Message {
         map >> thrust;                        // offset: 16
         map >> yaw;                           // offset: 20
         map >> mode;                          // offset: 24
+        map >> act;                           // offset: 25
     }
 };
 
