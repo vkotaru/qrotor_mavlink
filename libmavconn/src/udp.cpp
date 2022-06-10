@@ -226,7 +226,7 @@ void MAVConnUDP::send_message(const mavlink::Message &message, const uint8_t sou
 		return;
 	}
 
-	log_send_obj(PFX, message);
+	// log_send_obj(PFX, message);
 
 	{
 		lock_guard lock(mutex);
