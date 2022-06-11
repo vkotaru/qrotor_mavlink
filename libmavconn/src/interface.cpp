@@ -120,13 +120,13 @@ void MAVConnInterface::log_recv(const char *pfx, mavlink_message_t &msg, Framing
 			(framing == Framing::bad_crc) ? "!CRC" :
 			(framing == Framing::bad_signature) ? "!SIG" : "ERR";
 
-	const char *proto_version_str = (msg.magic == MAVLINK_STX) ? "v2.0" : "v1.0";
+	// const char *proto_version_str = (msg.magic == MAVLINK_STX) ? "v2.0" : "v1.0";
 
-	printf("%s%zu: recv: %s %4s Message-Id: %u [%u bytes] IDs: %u.%u Seq: %u",
-			pfx, conn_id,
-			proto_version_str,
-			framing_str,
-			msg.msgid, msg.len, msg.sysid, msg.compid, msg.seq);
+	// printf("%s%zu: recv: %s %4s Message-Id: %u [%u bytes] IDs: %u.%u Seq: %u",
+	// 		pfx, conn_id,
+	// 		proto_version_str,
+	// 		framing_str,
+	// 		msg.msgid, msg.len, msg.sysid, msg.compid, msg.seq);
 }
 
 void MAVConnInterface::log_send(const char *pfx, const mavlink_message_t *msg)
