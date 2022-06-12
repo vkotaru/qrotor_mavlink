@@ -10,7 +10,16 @@ QrotorMavlink::QrotorMavlink() {
 QrotorMavlink::QrotorMavlink(uint8_t system_id, uint8_t component_id,
                              std::string bind_host, unsigned short bind_port,
                              std::string remote_host,
-                             unsigned short remote_port) {
+                             unsigned short remote_port)
+    : QrotorMavlink(system_id, component_id, bind_host, bind_port, remote_host,
+                    remote_port, 100) {}
+
+QrotorMavlink::QrotorMavlink(uint8_t system_id, uint8_t component_id,
+                             std::string bind_host, unsigned short bind_port,
+                             std::string remote_host,
+                             unsigned short remote_port,
+                             const size_t message_buffer_size)
+    : message_buffer_size(message_buffer_size) {
 
   try {
     client = std::make_shared<MAVConnUDP>(system_id, component_id, bind_host,
@@ -20,6 +29,7 @@ QrotorMavlink::QrotorMavlink(uint8_t system_id, uint8_t component_id,
     std::cout << " Exception in QrotorMavlink::init: '" << e.what() << "'\n";
     udp_client_created = false;
   }
+  message_buffer_.resize(message_buffer_size);
 }
 
 QrotorMavlink::~QrotorMavlink() = default;
@@ -29,7 +39,7 @@ void QrotorMavlink::recv_message(const mavlink_message_t *message,
   // printf("Got message %u, len: %u, framing: %d\n", message->msgid,
   // message->len, int(framing));
   message_buffer_mutex_.lock();
-  msg_buffer_queue_.push(*message);
+  message_buffer_.push_back(*message);
   message_buffer_mutex_.unlock();
   cond.notify_one();
 }
@@ -41,8 +51,9 @@ bool QrotorMavlink::wait_one() {
 }
 
 void QrotorMavlink::decode() {
-  while (!msg_buffer_queue_.empty()) {
-    mavlink_message_t buf_msg = msg_buffer_queue_.front();
+  while (!message_buffer_.empty()) {
+    mavlink_message_t buf_msg = message_buffer_.front();
+    message_buffer_.pop_front();
 
     switch (buf_msg.msgid) {
     case mavlink_msg::HEARTBEAT::MSG_ID:
@@ -64,7 +75,6 @@ void QrotorMavlink::decode() {
     default:
       break;
     }
-    msg_buffer_queue_.pop();
   }
 }
 

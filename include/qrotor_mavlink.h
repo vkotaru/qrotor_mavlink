@@ -9,8 +9,8 @@
 #include <mavconn/udp.h>
 #include <mutex>
 #include <queue>
-
 #include <eigen3/Eigen/Dense>
+#include <boost/circular_buffer.hpp>
 
 namespace qrotor_mavlink {
 using namespace mavconn;
@@ -20,6 +20,8 @@ using namespace mavlink::minimal::msg;
 using namespace mavlink::common::msg;
 using namespace mavlink::qrotor::msg;
 } // namespace mavlink_msg
+
+using fixed_mavlink_message_buffer =  boost::circular_buffer<mavlink_message_t> ;
 
 class QrotorMavlink {
 private:
@@ -38,13 +40,19 @@ private:
 
   void recv_message(const mavlink_message_t *message, Framing framing);
   bool wait_one();
-  std::queue<mavlink_message_t> msg_buffer_queue_;
+
+  size_t message_buffer_size = 100;
+  fixed_mavlink_message_buffer message_buffer_;
+  // std::queue<mavlink_message_t> msg_buffer_queue_;
 
 public:
   QrotorMavlink();
   QrotorMavlink(uint8_t system_id, uint8_t component_id, std::string bind_host,
                 unsigned short bind_port, std::string remote_host,
                 unsigned short remote_port);
+  QrotorMavlink(uint8_t system_id, uint8_t component_id, std::string bind_host,
+                unsigned short bind_port, std::string remote_host,
+                unsigned short remote_port, const size_t message_buffer_size);
 
   ~QrotorMavlink();
 
@@ -52,10 +60,10 @@ public:
   void decode();
 
   void
-  copy_and_flush_buffer_queue(std::queue<mavlink_message_t> &copy_to_buffer) {
+  copy_and_flush_buffer_queue(boost::circular_buffer<mavlink_message_t> &copy_to_buffer) {
     message_buffer_mutex_.lock();
-    copy_to_buffer = msg_buffer_queue_;
-    msg_buffer_queue_ = {};
+    copy_to_buffer = message_buffer_;
+    message_buffer_.clear();
     message_buffer_mutex_.unlock();
   }
 
