@@ -47,7 +47,7 @@ static bool resolve_address_udp(io_service &io, size_t chan, std::string host, u
 		ep = q_ep;
 		ep.port(port);
 		result = true;
-		printf(PFXd "host %s resolved as %s", chan, host.c_str(), to_string_ss(ep).c_str());
+		printf(PFXd "host %s resolved as %s\n", chan, host.c_str(), to_string_ss(ep).c_str());
 	};
 
 #if BOOST_ASIO_VERSION >= 101200
@@ -57,7 +57,7 @@ static bool resolve_address_udp(io_service &io, size_t chan, std::string host, u
 #endif
 
 	if (ec) {
-		printf(PFXd "resolve error: %s", chan, ec.message().c_str());
+		printf(PFXd "resolve error: %s\n", chan, ec.message().c_str());
 		result = false;
 	}
 
@@ -167,12 +167,12 @@ void MAVConnUDP::close()
 void MAVConnUDP::send_bytes(const uint8_t *bytes, size_t length)
 {
 	if (!is_open()) {
-		printf(PFXd "send: channel closed!", conn_id);
+		printf(PFXd "send: channel closed!\n", conn_id);
 		return;
 	}
 
 	if (!remote_exists) {
-		printf(PFXd "send: Remote not known, message dropped.", conn_id);
+		printf(PFXd "send: Remote not known, message dropped.\n", conn_id);
 		return;
 	}
 
@@ -192,12 +192,12 @@ void MAVConnUDP::send_message(const mavlink_message_t *message)
 	assert(message != nullptr);
 
 	if (!is_open()) {
-		printf(PFXd "send: channel closed!", conn_id);
+		printf(PFXd "send: channel closed!\n", conn_id);
 		return;
 	}
 
 	if (!remote_exists) {
-		printf(PFXd "send: Remote not known, message dropped.", conn_id);
+		printf(PFXd "send: Remote not known, message dropped.\n", conn_id);
 		return;
 	}
 
@@ -231,8 +231,11 @@ void MAVConnUDP::send_message(const mavlink::Message &message, const uint8_t sou
 	{
 		lock_guard lock(mutex);
 
-		if (tx_q.size() >= MAX_TXQ_SIZE)
+		if (tx_q.size() >= MAX_TXQ_SIZE) {
+      // tx_q.pop_front();
+      // printf("\033[01;33m MAVConnUDP::send_message: TX queue overflow\n");
 			throw std::length_error("MAVConnUDP::send_message: TX queue overflow");
+    }
 
 		tx_q.emplace_back(message, get_status_p(), sys_id, source_compid);
 	}
@@ -282,7 +285,7 @@ void MAVConnUDP::do_sendto(bool check_tx_state)
 				assert(bytes_transferred <= buf_ref.len);
 
 				if (error == boost::asio::error::network_unreachable) {
-					printf(PFXd "sendto: %s, retrying", sthis->conn_id, error.message().c_str());
+					printf(PFXd "sendto: %s, retrying\n", sthis->conn_id, error.message().c_str());
 					// do not return, try to resend
 				}
 				else if (error) {
