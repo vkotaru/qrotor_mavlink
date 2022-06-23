@@ -21,14 +21,8 @@ QrotorMavlink::QrotorMavlink(uint8_t system_id, uint8_t component_id,
                              const size_t message_buffer_size)
     : message_buffer_size(message_buffer_size) {
 
-  try {
-    client = std::make_shared<MAVConnUDP>(system_id, component_id, bind_host,
+  client = std::make_shared<MAVConnUDP>(system_id, component_id, bind_host,
                                           bind_port, remote_host, remote_port);
-    udp_client_created = true;
-  } catch (const std::exception &e) {
-    std::cout << " Exception in QrotorMavlink::init: '" << e.what() << "'\n";
-    udp_client_created = false;
-  }
   message_buffer_.resize(message_buffer_size);
 }
 
