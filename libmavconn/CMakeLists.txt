@@ -3,7 +3,7 @@ project(libmavconn)
 
 #find_package(catkin REQUIRED)
 #find_package(console_bridge REQUIRED)
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost COMPONENTS system)
 
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 include(EnableCXX11)
@@ -40,7 +40,7 @@ endif()
 
 
 ## Declare a cpp library
-add_library(mavconn ${SRCS})
+add_library(mavconn ${qrotor-mavlink-type} ${SRCS})
 target_link_libraries(mavconn
   ${Boost_LIBRARIES}
 #  ${console_bridge_LIBRARIES}
