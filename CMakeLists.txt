@@ -4,19 +4,18 @@ project(qrotor_mavlink)
 set(PYTHON_EXECUTABLE /usr/bin/python3)
 
 
-if(QROTOR_MAVLINK_BUILD_STATIC_LIBS)
+if (QROTOR_MAVLINK_BUILD_STATIC_LIBS)
     set(qrotor-mavlink-type STATIC)
-else()
+else ()
     set(qrotor-mavlink-type SHARED)
-endif()
+endif ()
 
 
-add_subdirectory(libmavconn)
-
-include_directories(include)
+include_directories(include
+        include/mavlink/v2.0/qrotor)
 
 add_library(qrotor_mavlink ${qrotor-mavlink-type} src/qrotor_mavlink.cpp)
-target_link_libraries(qrotor_mavlink mavconn pthread)
+target_link_libraries(qrotor_mavlink pthread)
 target_include_directories(qrotor_mavlink PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_executable(client test/client.cpp)

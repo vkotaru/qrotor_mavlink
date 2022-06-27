@@ -6,4 +6,4 @@ cmake ..
 make
 cd ../..
 mkdir -p libmavconn/include/mavlink
-cp -r mavlink-gbp-release/build/include/v2.0 libmavconn/include/mavlink
+cp -r mavlink-gbp-release/build/include/v2.0 include/mavlink
