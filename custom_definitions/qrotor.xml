@@ -82,7 +82,9 @@
       <description>The system status info</description>
       <field type="uint64_t" name="time_usec" units="us">Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude of the number.</field>
       <field type="float" name="loop_rate">freq</field>
-      <field type="float" name="max_comms_rate">freq</field>
+      <field type="float" name="max_comms_rate">comms_rate</field>
+      <field type="uint64_t" name="error_codes">error_codes</field>
+      <field type="uint64_t" name="warning_codes">warning_codes</field>
     </message>
   </messages>
 </mavlink>
